@@ -75,6 +75,8 @@ include(pgosupport.cmake)
 #---------------------------------------------------
 include(components.cmake)
 
+set(CLR_ONLY_STATIC_LIBS 1)
+
 #---------------------------
 # Build the single file host
 #---------------------------

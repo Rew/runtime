@@ -60,6 +60,7 @@
     <TargetstvOSSimulator Condition="'$(TargetOS)' == 'tvossimulator'">true</TargetstvOSSimulator>
     <TargetsAndroid Condition="'$(TargetOS)' == 'android'">true</TargetsAndroid>
     <TargetsBrowser Condition="'$(TargetOS)' == 'browser'">true</TargetsBrowser>
+    <TargetsTachyon Condition="'$(TargetOS)' == 'tachyon'">true</TargetsTachyon>
     <TargetsWasi Condition="'$(TargetOS)' == 'wasi'">true</TargetsWasi>
     <TargetsWindows Condition="'$(TargetOS)' == 'windows'">true</TargetsWindows>
     <TargetsUnix Condition="'$(TargetsOpenBSD)' == 'true' or '$(TargetsFreeBSD)' == 'true' or '$(Targetsillumos)' == 'true' or '$(TargetsSolaris)' == 'true' or '$(TargetsHaiku)' == 'true' or '$(TargetsLinux)' == 'true' or '$(TargetsNetBSD)' == 'true' or '$(TargetsOSX)' == 'true' or '$(TargetsMacCatalyst)' == 'true' or '$(TargetstvOS)' == 'true' or '$(TargetsiOS)' == 'true' or '$(TargetsAndroid)' == 'true'">true</TargetsUnix>

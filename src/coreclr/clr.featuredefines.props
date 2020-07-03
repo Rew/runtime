@@ -40,6 +40,21 @@
         <FeaturePerfTracing>false</FeaturePerfTracing>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(TargetsTachyon)' == 'true'">
+        <FeatureXplatEventSource>true</FeatureXplatEventSource>
+        
+        <FeatureXplatEventSource>false</FeatureXplatEventSource>
+
+        <FeatureArrayStubAsIL>true</FeatureArrayStubAsIL>
+        <FeatureMulticastStubAsIL>true</FeatureMulticastStubAsIL>
+        <FeatureInstantiatingStubAsIL>true</FeatureInstantiatingStubAsIL>
+        <FeatureStubsAsIL>true</FeatureStubsAsIL>
+
+        <FeatureCominterop>false</FeatureCominterop>
+    
+        <FeatureCoreFxGlobalization>false</FeatureCoreFxGlobalization>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(TargetsUnix)' == 'true'">
         <FeatureXplatEventSource Condition="'$(FeatureXplatEventSource)' == '' AND '$(TargetOS)' == 'linux'">true</FeatureXplatEventSource>
         <FeatureComWrappers>true</FeatureComWrappers>

@@ -253,8 +253,10 @@ namespace System.Runtime.InteropServices
             IntPtr result = IntPtr.Zero;
 #if TARGET_WINDOWS
             result = Interop.Kernel32.GetModuleHandle(null);
-#else
+#elif TARGET_UNIX
             result = Interop.Sys.GetDefaultSearchOrderPseudoHandle();
+#else
+            if(result == IntPtr.Zero) throw new PlatformNotSupportedException();
 #endif
             // I don't know when a failure case can occur here, but checking for it and throwing an exception
             // if we encounter it.

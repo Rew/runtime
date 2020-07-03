@@ -23,6 +23,10 @@ if(CLR_CMAKE_TARGET_TIZEN_LINUX)
   set(FEATURE_GDBJIT_LANGID_CS 1)
 endif()
 
+if(CLR_CMAKE_TARGET_TACHYON)
+  set(FEATURE_STANDALONE_GC 0)
+endif()
+
 # FEATURE_EVENT_TRACE: Enables the full eventing infrastructure (generated FireEtw* functions,
 # EventPipe write calls, ETW on Windows). Set on all platforms except cross-component WASM builds.
 if(NOT DEFINED FEATURE_EVENT_TRACE)

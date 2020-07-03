@@ -287,6 +287,8 @@ function(set_target_definitions_to_custom_os_and_arch)
     endif()
   elseif (TARGETDETAILS_OS MATCHES "^win")
     target_compile_definitions(${TARGETDETAILS_TARGET} PRIVATE TARGET_WINDOWS)
+  elseif (TARGETDETAILS_OS STREQUAL "tachyon")
+      target_compile_definitions(${TARGETDETAILS_TARGET} PRIVATE TARGET_TACHYON)
   endif((TARGETDETAILS_OS MATCHES "^unix"))
 
   if (TARGETDETAILS_ARCH STREQUAL "x86")
