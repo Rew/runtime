@@ -75,6 +75,12 @@
         <TargetsBrowser>true</TargetsBrowser>
       </PropertyGroup>
     </When>
+    <When Condition="'$(TargetFrameworkSuffix)' == 'Tachyon'">
+      <PropertyGroup>
+        <TargetsTachyon>true</TargetsTachyon>
+        <PackageTargetRuntime>tachyon</PackageTargetRuntime>
+      </PropertyGroup>
+    </When>
     <When Condition="'$(TargetFrameworkSuffix)' == ''">
       <PropertyGroup>
         <TargetsAnyOS>true</TargetsAnyOS>

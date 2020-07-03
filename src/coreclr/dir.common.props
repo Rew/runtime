@@ -58,6 +58,7 @@
     <TargetsSunOS Condition="'$(TargetOS)' == 'SunOS'">true</TargetsSunOS>
     <TargetsOSX Condition="'$(TargetOS)' == 'OSX'">true</TargetsOSX>
     <TargetsWindows Condition="'$(TargetOS)' == 'Windows_NT'">true</TargetsWindows>
+    <TargetsTachyon Condition="'$(TargetOS)' == 'Tachyon'">true</TargetsTachyon>
 
     <TargetsUnix Condition="'$(TargetsFreeBSD)' == 'true' or '$(TargetsLinux)' == 'true' or '$(TargetsNetBSD)' == 'true' or '$(TargetsOSX)' == 'true' or '$(TargetsSunOS)' == 'true'">true</TargetsUnix>
 

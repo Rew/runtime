@@ -86,7 +86,7 @@ function InitializeCustomToolset {
 function Build {
   $toolsetBuildProj = InitializeToolset
   InitializeCustomToolset
-
+  
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'Build.binlog') } else { '' }
   $platformArg = if ($platform) { "/p:Platform=$platform" } else { '' }
 

@@ -1785,6 +1785,43 @@
       <Link>Common\Interop\OSX\Interop.Libraries.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetsTachyon)' == 'true'">
+    <Compile Include="$(CommonPath)Interop\Tachyon\Interop.GetPid.cs">
+      <Link>Common\Interop\Tachyon\Interop.GetPid.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)Interop\Tachyon\Interop.GetRandomBytes.cs">
+      <Link>Common\Interop\Tachyon\Interop.GetRandomBytes.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)Interop\Tachyon\Interop.Libraries.cs">
+      <Link>Common\Interop\Tachyon\Interop.Libraries.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Internal\IO\File.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\Tracing\RuntimeEventSourceHelper.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\DebugProvider.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\Stopwatch.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Globalization\CultureData.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Globalization\CultureInfo.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Globalization\GlobalizationMode.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Globalization\HijriCalendar.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\IO\FileStream.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\IO\Path.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\IO\PathInternal.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\Marshal.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Loader\LibraryNameVariation.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\VersioningHelper.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\MemoryFailPoint.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Security\SecureString.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Thread.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\TimerQueue.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Microsoft\Win32\SafeHandles\SafeFileHandle.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\AppDomain.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Buffer.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\DateTime.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Environment.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Guid.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\PasteArguments.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\TimeZoneInfo.Tachyon.cs" />
+  </ItemGroup>
   <ItemGroup Condition="'$(FeatureHardwareIntrinsics)' == 'true' and ('$(Platform)' == 'x64' or ('$(Platform)' == 'x86' and '$(TargetsUnix)' != 'true'))">
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Intrinsics\X86\Aes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Intrinsics\X86\Avx.cs" />
