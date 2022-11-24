@@ -64,6 +64,9 @@
 // because it happens to generate somewhat faster code in a checked build.  (They
 // both introduce no overhead in a fastchecked build.)
 //
+
+#define _ALLOW_KEYWORD_MACROS 1
+
 class __SafeToReturn {
 public:
     static int safe_to_return() {return 0;};

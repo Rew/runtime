@@ -5316,7 +5316,7 @@ unsigned Compiler::gtSetEvalOrder(GenTree* tree)
 
                     /* Assignment to an enregistered LCL_VAR */
                     costEx = op2->GetCostEx();
-                    costSz = max(3, op2->GetCostSz()); // 3 is an estimate for a reg-reg assignment
+                    costSz = max(3, (int)op2->GetCostSz()); // 3 is an estimate for a reg-reg assignment
                     goto DONE_OP1_AFTER_COST;
                 }
                 goto DONE_OP1;
@@ -23826,7 +23826,7 @@ void ReturnTypeDesc::InitializeStructReturnType(Compiler*                comp,
             assert(varTypeIsValidHfaType(hfaType));
 
             // Note that the retail build issues a warning about a potential divsion by zero without this "max",
-            unsigned elemSize = max(1, genTypeSize(hfaType));
+            unsigned elemSize = max(1u, genTypeSize(hfaType));
 
             // The size of this struct should be evenly divisible by elemSize
             assert((structSize % elemSize) == 0);

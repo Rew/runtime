@@ -2898,7 +2898,7 @@ HRESULT CordbTypeEnum::Next(ULONG celt, ICorDebugType *values[], ULONG *pceltFet
 
     HRESULT hr = S_OK;
 
-    int iMax = min( m_iMax, m_iCurrent+celt);
+    int iMax = min( m_iMax, (UINT)(m_iCurrent+celt));
     int i;
 
     for (i = m_iCurrent; i < iMax; i++)

@@ -4,6 +4,7 @@
 #ifndef BITONIC_SORT_H
 #define BITONIC_SORT_H
 
+#include "common.h"
 #include "../defs.h"
 #include "../machine_traits.h"
 

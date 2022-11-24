@@ -11,7 +11,10 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#include <algorithm>
 #include <switches.h>
 #include <winwrap.h>
 #include <minipal/utils.h>
+
+using namespace std;
 #endif // _COMMON_H_

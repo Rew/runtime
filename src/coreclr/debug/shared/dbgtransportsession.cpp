@@ -1946,10 +1946,10 @@ void DbgTransportSession::TransportWorker()
                     // of the write data as the next message header). So read and discard the data into a
                     // dummy buffer.
                     BYTE    rgDummy[256];
-                    DWORD   cbBytesToRead = sReceiveHeader.TypeSpecificData.MemoryAccess.m_cbLeftSideBuffer;
+                    size_t   cbBytesToRead = sReceiveHeader.TypeSpecificData.MemoryAccess.m_cbLeftSideBuffer;
                     while (cbBytesToRead)
                     {
-                        DWORD cbTransfer = min(cbBytesToRead, sizeof(rgDummy));
+                        size_t cbTransfer = min(cbBytesToRead, sizeof(rgDummy));
                         if (!ReceiveBlock(rgDummy, cbTransfer))
                             HANDLE_TRANSIENT_ERROR();
                         cbBytesToRead -= cbTransfer;

@@ -17,6 +17,8 @@
 #ifndef __clr_std_vector_h__
 #define __clr_std_vector_h__
 
+#include "clr_std/algorithm"
+
 // This is defined in the debugmacrosext.h header, but don't take a dependency on that.
 #ifndef INDEBUG
 #ifdef _DEBUG
@@ -333,7 +335,7 @@ namespace std
                 {
                     // To avoid resizing for every element that gets added to a vector, we
                     // allocate at least twice the old capacity, or 16 elements, whichever is greater.
-                    newcapacity = max(newcapacity, max(m_capacity * 2, 16));
+                    newcapacity = std::max(newcapacity, std::max(m_capacity * 2, (size_t)16));
 
                     size_t bytesNeeded = newcapacity * sizeof(T);
                     if (bytesNeeded / sizeof(T) != newcapacity)

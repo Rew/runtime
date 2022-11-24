@@ -1,0 +1,30 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+//
+// <OWNER>clrosdev</OWNER>
+//
+// ===========================================================================
+// File: algorithm
+//
+// ===========================================================================
+// dummy algorithm for PAL
+
+#pragma once
+
+#include "palrt.h"
+
+
+namespace std
+{   
+    template<class T> 
+    const T& max(const T& a, const T& b)
+    {
+        return (a >= b) ? a : b;
+    }
+    template<class T> 
+    const T& min(const T& a, const T& b)
+    {
+        return (a <= b) ? a : b;
+    }
+}

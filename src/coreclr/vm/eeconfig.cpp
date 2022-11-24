@@ -440,7 +440,7 @@ HRESULT EEConfig::sync()
     if (!iGCLOHThreshold)
     {
         iGCLOHThreshold = Configuration::GetKnobDWORDValue(W("System.GC.LOHThreshold"), CLRConfig::EXTERNAL_GCLOHThreshold);
-        iGCLOHThreshold = max (iGCLOHThreshold, LARGE_OBJECT_SIZE);
+        iGCLOHThreshold = max (iGCLOHThreshold, (DWORD)LARGE_OBJECT_SIZE);
     }
 
 #ifdef FEATURE_CONSERVATIVE_GC

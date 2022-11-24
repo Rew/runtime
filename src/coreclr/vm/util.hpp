@@ -16,7 +16,16 @@
 #include "clrdata.h"
 #include "xclrdata.h"
 #include "posterror.h"
+
+#ifdef PAL_STDCPP_COMPAT
+#include <algorithm>
+#include <limits>
+#include <type_traits>
+#else
+#include "clr_std/algorithm"
+#include "clr_std/limits"
 #include "clr_std/type_traits"
+#endif
 
 // Hot cache lines need to be aligned to cache line size to improve performance
 #if defined(TARGET_ARM64)

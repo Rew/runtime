@@ -11285,7 +11285,7 @@ void LinearScan::RegisterSelection::try_BEST_FIT()
         // Find the next RefPosition of the register.
         LsraLocation nextIntervalLocation = linearScan->getNextIntervalRef(bestFitCandidateRegNum, regType);
         LsraLocation nextPhysRefLocation  = linearScan->getNextFixedRef(bestFitCandidateRegNum, regType);
-        nextPhysRefLocation               = Min(nextPhysRefLocation, nextIntervalLocation);
+        nextPhysRefLocation               = min(nextPhysRefLocation, nextIntervalLocation);
         // If the nextPhysRefLocation is a fixedRef for the rangeEndRefPosition, increment it so that
         // we don't think it isn't covering the live range.
         // This doesn't handle the case where earlier RefPositions for this Interval are also
@@ -11495,7 +11495,7 @@ void LinearScan::RegisterSelection::try_FAR_NEXT_REF()
         // Find the next RefPosition of the register.
         LsraLocation nextIntervalLocation =
             linearScan->getNextIntervalRef(farthestCandidateRegNum, currentInterval->registerType);
-        LsraLocation nextPhysRefLocation = Min(linearScan->nextFixedRef[farthestCandidateRegNum], nextIntervalLocation);
+        LsraLocation nextPhysRefLocation = min(linearScan->nextFixedRef[farthestCandidateRegNum], nextIntervalLocation);
         if (nextPhysRefLocation == farthestLocation)
         {
             farthestSet |= farthestCandidateBit;
@@ -11628,7 +11628,7 @@ void LinearScan::RegisterSelection::calculateCoversSets()
             // Find the next RefPosition of the register.
             LsraLocation nextIntervalLocation    = linearScan->getNextIntervalRef(coversCandidateRegNum, regType);
             LsraLocation nextPhysRefLocation     = linearScan->getNextFixedRef(coversCandidateRegNum, regType);
-            LsraLocation coversCandidateLocation = Min(nextPhysRefLocation, nextIntervalLocation);
+            LsraLocation coversCandidateLocation = min(nextPhysRefLocation, nextIntervalLocation);
 
             // If the nextPhysRefLocation is a fixedRef for the rangeEndRefPosition, increment it so that
             // we don't think it isn't covering the live range.

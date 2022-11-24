@@ -1086,7 +1086,7 @@ void GcSlotDecoder::DecodeSlotTable(BitStreamReader& reader)
         m_SlotArray[0].Slot.RegisterNumber = regNum;
         m_SlotArray[0].Flags = flags;
 
-        UINT32 loopEnd = _min(m_NumRegisters, MAX_PREDECODED_SLOTS);
+        UINT32 loopEnd = min(m_NumRegisters, (UINT32)MAX_PREDECODED_SLOTS);
         for(i++; i < loopEnd; i++)
         {
             if(flags)
@@ -1120,7 +1120,7 @@ void GcSlotDecoder::DecodeSlotTable(BitStreamReader& reader)
         m_SlotArray[i].Slot.Stack.Base = spBase;
         m_SlotArray[i].Flags = flags;
 
-        UINT32 loopEnd = _min(m_NumRegisters + numStackSlots, MAX_PREDECODED_SLOTS);
+        UINT32 loopEnd = min(m_NumRegisters + numStackSlots, (UINT32)MAX_PREDECODED_SLOTS);
         for(i++; i < loopEnd; i++)
         {
             spBase = (GcStackSlotBase) reader.Read(2);
@@ -1157,7 +1157,7 @@ void GcSlotDecoder::DecodeSlotTable(BitStreamReader& reader)
         m_SlotArray[i].Slot.Stack.Base = spBase;
         m_SlotArray[i].Flags = flags;
 
-        UINT32 loopEnd = _min(m_NumSlots, MAX_PREDECODED_SLOTS);
+        UINT32 loopEnd = min(m_NumSlots, (UINT32)MAX_PREDECODED_SLOTS);
         for(i++; i < loopEnd; i++)
         {
             spBase = (GcStackSlotBase) reader.Read(2);

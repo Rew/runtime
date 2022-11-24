@@ -299,7 +299,7 @@ namespace vxsort {{
 namespace smallsort {{
 template<> struct bitonic<{t}, AVX512> {{
     static const int N = {self.vector_size()};
-    static constexpr {t} MAX = std::numeric_limits<{t}>::Max();
+    static constexpr {t} MAX = std::numeric_limits<{t}>::max();
 public:
 """
         print(s, file=f)
@@ -541,7 +541,6 @@ public:
         s = f"""// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#include "common.h"
 #include "{basename}"
 
 using namespace vxsort;

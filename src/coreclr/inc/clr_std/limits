@@ -1,0 +1,46 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+//
+// clr_std/algorithm
+//
+// Copy of some key Standard Template Library functionality
+
+#pragma once
+
+#ifdef USE_STL
+#include <limits>
+#else
+
+namespace std {
+template <class _Ty>
+class numeric_limits {
+   public:
+    static constexpr _Ty max() { static_assert(sizeof(_Ty) != sizeof(_Ty), "func must be specialized!"); return _Ty(); }
+    static constexpr _Ty min() { static_assert(sizeof(_Ty) != sizeof(_Ty), "func must be specialized!"); return _Ty(); }
+};
+
+template <>
+class numeric_limits<int32_t> {
+public:
+    static constexpr int32_t max() { return 0x7fffffff; }
+    static constexpr int32_t min() { return -0x7fffffff - 1; }
+};
+
+template <>
+class numeric_limits<uint32_t> {
+public:
+    static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr uint32_t min() { return 0; }
+};
+
+template <>
+class numeric_limits<int64_t> {
+   public:
+    static constexpr int64_t max() { return 0x7fffffffffffffffi64; }
+
+    static constexpr int64_t min() { return -0x7fffffffffffffffi64 - 1; }
+};
+}  // namespace std
+
+#endif

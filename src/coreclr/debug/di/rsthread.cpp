@@ -5158,7 +5158,7 @@ HRESULT CordbValueEnum::Next(ULONG celt, ICorDebugValue *values[], ULONG *pceltF
 
     HRESULT hr = S_OK;
 
-    int iMax = min( m_iMax, m_iCurrent+celt);
+    int iMax = min( m_iMax, (UINT)(m_iCurrent+celt));
     int i;
     for (i = m_iCurrent; i< iMax;i++)
     {
@@ -8100,7 +8100,7 @@ HRESULT CordbJITILFrame::FabricateNativeInfo(DWORD dwIndex,
             // first argument, but thereafter we have to decrement it
             // before getting the variable's location from it.  So increment
             // it here to be consistent later.
-            rpCur += max(cbType, cbArchitectureMin);
+            rpCur += max((ULONG)cbType, cbArchitectureMin);
 #endif
 
             // Grab the IL code's function's method signature so we can see if it's static.
@@ -8133,7 +8133,7 @@ HRESULT CordbJITILFrame::FabricateNativeInfo(DWORD dwIndex,
                 IfFailThrow(pArgType->GetUnboxedObjectSize(&cbType));
 
 #if defined(TARGET_X86) // STACK_GROWS_DOWN_ON_ARGS_WALK
-                rpCur -= max(cbType, cbArchitectureMin);
+                rpCur -= max((ULONG)cbType, cbArchitectureMin);
                 m_rgNVI[i].loc.vlFixedVarArg.vlfvOffset =
                     (unsigned)(m_FirstArgAddr - rpCur);
 
@@ -8143,7 +8143,7 @@ HRESULT CordbJITILFrame::FabricateNativeInfo(DWORD dwIndex,
 #else // STACK_GROWS_UP_ON_ARGS_WALK
                 m_rgNVI[i].loc.vlFixedVarArg.vlfvOffset =
                     (unsigned)(rpCur - m_FirstArgAddr);
-                rpCur += max(cbType, cbArchitectureMin);
+                rpCur += max((ULONG)cbType, cbArchitectureMin);
                 AlignAddressForType(pArgType, rpCur);
 #endif
 
@@ -10769,7 +10769,7 @@ HRESULT CordbCodeEnum::Next(ULONG celt, ICorDebugCode *values[], ULONG *pceltFet
 
     HRESULT hr = S_OK;
 
-    int iMax = min( m_iMax, m_iCurrent+celt);
+    int iMax = min( m_iMax, (UINT)(m_iCurrent+celt));
     int i;
 
     for (i = m_iCurrent; i < iMax; i++)

@@ -3,8 +3,6 @@
 
 #pragma once
 
-#define NOMINMAX
-
 #include <atomic>
 #include <cstdio>
 #include <thread>

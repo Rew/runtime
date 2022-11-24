@@ -2284,11 +2284,11 @@ STDMETHODIMP RegMeta::GetUserString(          // S_OK or error.
     // Copy the string back to the caller.
     if ((wszString != NULL) && (cchStringSize > 0))
     {
-        ULONG cbStringSize = cchStringSize * sizeof(WCHAR);
+        SIZE_T cbStringSize = cchStringSize * sizeof(WCHAR);
         memcpy(
             wszString,
             userString.GetDataPointer(),
-            min(userString.GetSize(), cbStringSize));
+            min((SIZE_T)userString.GetSize(), cbStringSize));
         if (cbStringSize < userString.GetSize())
         {
             if ((wszString != NULL) && (cchStringSize > 0))
