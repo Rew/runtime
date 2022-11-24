@@ -76,14 +76,4 @@ class numeric_limits<int64_t> {
 };
 }  // namespace std
 
-#ifndef max
-template <typename T>
-T max(T a, T b) {
-    if (a > b)
-        return a;
-    else
-        return b;
-}
-#endif
-
 #endif  // VXSORT_DEFS_H

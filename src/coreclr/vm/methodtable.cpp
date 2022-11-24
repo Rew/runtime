@@ -2767,7 +2767,7 @@ void  MethodTable::AssignClassifiedEightByteTypes(SystemVStructRegisterPassingHe
 
             _ASSERTE(fieldEndEightByte < CLR_SYSTEMV_MAX_EIGHTBYTES_COUNT_TO_PASS_IN_REGISTERS);
 
-            usedEightBytes = Max(usedEightBytes, fieldEndEightByte + 1);
+            usedEightBytes = max(usedEightBytes, fieldEndEightByte + 1);
 
             for (unsigned int currentFieldEightByte = fieldStartEightByte; currentFieldEightByte <= fieldEndEightByte; currentFieldEightByte++)
             {
@@ -2819,7 +2819,7 @@ void  MethodTable::AssignClassifiedEightByteTypes(SystemVStructRegisterPassingHe
                 foundFieldInEightByte = false;
             }
 
-            accumulatedSizeForEightBytes = Max(accumulatedSizeForEightBytes, offset + fieldSize);
+            accumulatedSizeForEightBytes = max(accumulatedSizeForEightBytes, offset + fieldSize);
         }
 
         for (unsigned int currentEightByte = 0; currentEightByte < usedEightBytes; currentEightByte++)
@@ -8715,7 +8715,7 @@ int MethodTable::GetFieldAlignmentRequirement()
     {
         return GetClass()->GetOverriddenFieldAlignmentRequirement();
     }
-    return min(GetNumInstanceFieldBytes(), TARGET_POINTER_SIZE);
+    return min(GetNumInstanceFieldBytes(), (UINT32)TARGET_POINTER_SIZE);
 }
 
 UINT32 MethodTable::GetNativeSize()

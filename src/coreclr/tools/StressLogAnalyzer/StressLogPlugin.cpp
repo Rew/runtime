@@ -5,6 +5,11 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
+#ifdef PAL_STDCPP_COMPAT
+#include <algorithm>
+#else
+#include "clr_std/algorithm"
+#endif
 #include <math.h>
 
 #ifndef INFINITY
@@ -1164,7 +1169,7 @@ static double FindLatestTime(StressLog::StressLogHeader* hdr)
     {
         StressMsg* msg = StressLog::TranslateMemoryMappedPointer(tsl->curPtr);
         double deltaTime = ((double)(msg->timeStamp - hdr->startTimeStamp)) / hdr->tickFrequency;
-        latestTime = max(latestTime, deltaTime);
+        latestTime = std::max(latestTime, deltaTime);
     }
     return latestTime;
 }
@@ -1266,7 +1271,7 @@ int ProcessStressLog(void* baseAddress, int argc, char* argv[])
     double latestTime = FindLatestTime(hdr);
     if (s_timeFilterStart < 0)
     {
-        s_timeFilterStart = max(latestTime + s_timeFilterStart, 0);
+        s_timeFilterStart = std::max(latestTime + s_timeFilterStart, 0.0);
         s_timeFilterEnd = latestTime;
     }
     for (ThreadStressLog* tsl = StressLog::TranslateMemoryMappedPointer(hdr->logs.t); tsl != nullptr; tsl = StressLog::TranslateMemoryMappedPointer(tsl->next))
@@ -1289,7 +1294,7 @@ int ProcessStressLog(void* baseAddress, int argc, char* argv[])
     SYSTEM_INFO systemInfo;
     GetSystemInfo(&systemInfo);
 
-    DWORD threadCount = min(systemInfo.dwNumberOfProcessors, MAXIMUM_WAIT_OBJECTS);
+    DWORD threadCount = std::min(systemInfo.dwNumberOfProcessors, (DWORD)MAXIMUM_WAIT_OBJECTS);
     HANDLE threadHandle[64];
     for (DWORD i = 0; i < threadCount; i++)
     {
@@ -1304,7 +1309,7 @@ int ProcessStressLog(void* baseAddress, int argc, char* argv[])
 
     // the interlocked increment may have increased s_msgCount beyond MAX_MESSAGE_COUNT -
     // make sure we don't go beyond the end of the buffer
-    s_msgCount = min(s_msgCount, MAX_MESSAGE_COUNT);
+    s_msgCount = std::min((LONG64)s_msgCount, (LONG64)MAX_MESSAGE_COUNT);
 
     if (s_gcFilterStart != 0)
     {
@@ -1313,10 +1318,10 @@ int ProcessStressLog(void* baseAddress, int argc, char* argv[])
         double endTime = 0.0;
         for (int i = s_gcFilterStart; i <= s_gcFilterEnd; i++)
         {
-            startTime = min(startTime, s_gcStartEnd[i].startTime);
+            startTime = std::min(startTime, s_gcStartEnd[i].startTime);
             if (s_gcStartEnd[i].endTime != 0.0)
             {
-                endTime = max(endTime, s_gcStartEnd[i].endTime);
+                endTime = std::max(endTime, s_gcStartEnd[i].endTime);
             }
             else
             {

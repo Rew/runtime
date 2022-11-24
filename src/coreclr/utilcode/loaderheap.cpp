@@ -1153,7 +1153,7 @@ BOOL UnlockedLoaderHeap::UnlockedReservePages(size_t dwSizeToCommit)
         }
 
         // Figure out how much to reserve
-        dwSizeToReserve = max(dwSizeToCommit, m_dwReserveBlockSize);
+        dwSizeToReserve = max(dwSizeToCommit, (size_t)m_dwReserveBlockSize);
 
         // Round to VIRTUAL_ALLOC_RESERVE_GRANULARITY
         dwSizeToReserve = ALIGN_UP(dwSizeToReserve, VIRTUAL_ALLOC_RESERVE_GRANULARITY);

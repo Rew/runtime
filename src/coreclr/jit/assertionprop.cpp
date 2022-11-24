@@ -989,7 +989,7 @@ void Compiler::optAssertionInit(bool isLocalProp)
     if (optAssertionDep == nullptr)
     {
         optAssertionDep =
-            new (this, CMK_AssertionProp) JitExpandArray<ASSERT_TP>(getAllocator(CMK_AssertionProp), max(1, lvaCount));
+            new (this, CMK_AssertionProp) JitExpandArray<ASSERT_TP>(getAllocator(CMK_AssertionProp), max(1u, lvaCount));
     }
 
     optAssertionTraitsInit(optMaxAssertionCount);

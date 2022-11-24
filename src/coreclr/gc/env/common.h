@@ -22,6 +22,7 @@
 #include <stdarg.h>
 #include <memory.h>
 
+#include <algorithm>
 #include <new>
 
 #ifdef TARGET_UNIX

@@ -9,6 +9,12 @@
 //*****************************************************************************
 #pragma once
 
+#ifdef PAL_STDCPP_COMPAT
+#include <algorithm>
+#else
+#include "clr_std/algorithm"
+#endif
+
 #include <switches.h>
 #include <crtwrap.h>
 

@@ -1735,7 +1735,7 @@ private:
 #ifdef TARGET_ARM
         if (regType == TYP_DOUBLE)
         {
-            loc = Min(loc, nextFixedRef[regNum + 1]);
+            loc = min(loc, nextFixedRef[regNum + 1]);
         }
 #endif
         return loc;
@@ -1748,7 +1748,7 @@ private:
 #ifdef TARGET_ARM
         if (regType == TYP_DOUBLE)
         {
-            loc = Min(loc, nextIntervalRef[regNum + 1]);
+            loc = min(loc, nextIntervalRef[regNum + 1]);
         }
 #endif
         return loc;

@@ -8278,7 +8278,7 @@ VOID    MethodTableBuilder::PlaceInstanceFields(MethodTable ** pByValueClassCach
                     minAlign *= 2;
             }
 
-            if (minAlign != min(dwNumInstanceFieldBytes, TARGET_POINTER_SIZE))
+            if (minAlign != min(dwNumInstanceFieldBytes, (DWORD)TARGET_POINTER_SIZE))
             {
                 EnsureOptionalFieldsAreAllocated(GetHalfBakedClass(), m_pAllocMemTracker, GetLoaderAllocator()->GetLowFrequencyHeap());
                 GetHalfBakedClass()->GetOptionalFields()->m_requiredFieldAlignment = (BYTE)minAlign;
@@ -10510,7 +10510,7 @@ MethodTableBuilder::SetupMethodTable2(
     // when the instance is in its "boxed" state.
     if (!IsInterface())
     {
-        DWORD baseSize = Max<DWORD>(bmtFP->NumInstanceFieldBytes + OBJECT_BASESIZE, MIN_OBJECT_SIZE);
+        DWORD baseSize = max<DWORD>(bmtFP->NumInstanceFieldBytes + OBJECT_BASESIZE, MIN_OBJECT_SIZE);
         baseSize = (baseSize + ALLOC_ALIGN_CONSTANT) & ~ALLOC_ALIGN_CONSTANT;  // m_BaseSize must be aligned
         pMT->SetBaseSize(baseSize);
 

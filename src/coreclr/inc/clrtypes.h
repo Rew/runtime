@@ -290,14 +290,14 @@ static_assert_no_msg(sizeof(CLR_BOOL) == 1);
 // --------------------------------------------------------------------------------
 
 template <typename T>
-T Min(T v1, T v2)
+T min(T v1, T v2)
 {
     STATIC_CONTRACT_LEAF;
     return v1 < v2 ? v1 : v2;
 }
 
 template <typename T>
-T Max(T v1, T v2)
+T max(T v1, T v2)
 {
     STATIC_CONTRACT_LEAF;
     return v1 > v2 ? v1 : v2;
@@ -431,5 +431,13 @@ inline UINT AlignmentTrim(SIZE_T value, UINT alignment)
     return ((UINT)value)&(alignment-1);
 }
 #endif // __APPLE__
+
+/*#if __SIZEOF_WCHAR_T__ > 2
+const WCHAR* wcschr (const WCHAR* ws, WCHAR wc);
+int wcscmp(const WCHAR* str1, const WCHAR* str2);
+size_t wcslen(const WCHAR* str);
+WCHAR* wcsrchr(const WCHAR* str, WCHAR chr);
+unsigned long wcstoul(const WCHAR* str, WCHAR** str_end, int base);
+#endif*/
 
 #endif  // CLRTYPES_H_

@@ -4044,7 +4044,7 @@ void Compiler::impImportNewObjArray(CORINFO_RESOLVED_TOKEN* pResolvedToken, CORI
     // Increase size of lvaNewObjArrayArgs to be the largest size needed to hold 'numArgs' integers
     // for our call to CORINFO_HELP_NEW_MDARR.
     lvaTable[lvaNewObjArrayArgs].lvExactSize =
-        max(lvaTable[lvaNewObjArrayArgs].lvExactSize, pCallInfo->sig.numArgs * sizeof(INT32));
+        max(lvaTable[lvaNewObjArrayArgs].lvExactSize, (unsigned)(pCallInfo->sig.numArgs * sizeof(INT32)));
 
     // The side-effects may include allocation of more multi-dimensional arrays. Spill all side-effects
     // to ensure that the shared lvaNewObjArrayArgs local variable is only ever used to pass arguments

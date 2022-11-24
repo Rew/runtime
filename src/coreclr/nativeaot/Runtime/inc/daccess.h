@@ -520,6 +520,8 @@
 #include <specstrings.h>
 #endif
 
+#include <algorithm>
+
 #define DACCESS_TABLE_SYMBOL "g_dacTable"
 
 #include "type_traits.hpp"

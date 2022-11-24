@@ -1972,30 +1972,30 @@ void Compiler::fgTableDispBasicBlock(BasicBlock* block, int ibcColWidth /* = 0 *
         {
             case BBJ_COND:
                 printf("-> " FMT_BB "%*s ( cond )", block->bbJumpDest->bbNum,
-                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 break;
 
             case BBJ_CALLFINALLY:
                 printf("-> " FMT_BB "%*s (callf )", block->bbJumpDest->bbNum,
-                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 break;
 
             case BBJ_ALWAYS:
                 if (flags & BBF_KEEP_BBJ_ALWAYS)
                 {
                     printf("-> " FMT_BB "%*s (ALWAYS)", block->bbJumpDest->bbNum,
-                           maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                           maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 }
                 else
                 {
                     printf("-> " FMT_BB "%*s (always)", block->bbJumpDest->bbNum,
-                           maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                           maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 }
                 break;
 
             case BBJ_LEAVE:
                 printf("-> " FMT_BB "%*s (leave )", block->bbJumpDest->bbNum,
-                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 break;
 
             case BBJ_EHFINALLYRET:
@@ -2008,7 +2008,7 @@ void Compiler::fgTableDispBasicBlock(BasicBlock* block, int ibcColWidth /* = 0 *
 
             case BBJ_EHCATCHRET:
                 printf("-> " FMT_BB "%*s ( cret )", block->bbJumpDest->bbNum,
-                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2), "");
+                       maxBlockNumWidth - max(CountDigits(block->bbJumpDest->bbNum), 2u), "");
                 break;
 
             case BBJ_THROW:
@@ -2035,7 +2035,7 @@ void Compiler::fgTableDispBasicBlock(BasicBlock* block, int ibcColWidth /* = 0 *
                 for (unsigned i = 0; i < jumpCnt; i++)
                 {
                     printf("%c" FMT_BB, (i == 0) ? ' ' : ',', jumpTab[i]->bbNum);
-                    switchWidth += 1 /* space/comma */ + 2 /* BB */ + max(CountDigits(jumpTab[i]->bbNum), 2);
+                    switchWidth += 1 /* space/comma */ + 2 /* BB */ + max(CountDigits(jumpTab[i]->bbNum), 2u);
 
                     const bool isDefault = bbJumpSwt->bbsHasDefault && (i == jumpCnt - 1);
                     if (isDefault)

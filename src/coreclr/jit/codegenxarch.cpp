@@ -7270,7 +7270,7 @@ int CodeGenInterface::genSPtoFPdelta() const
         //
         // To be predictive and so as never to under-estimate offset of vars from FP
         // we will always position FP at min(240, outgoing arg area size).
-        delta = Min(240, (int)compiler->lvaOutgoingArgSpaceSize);
+        delta = min(240, (int)compiler->lvaOutgoingArgSpaceSize);
     }
     else if (compiler->opts.compDbgEnC)
     {
