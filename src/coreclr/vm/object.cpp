@@ -1468,7 +1468,7 @@ void StackTraceArray::Grow(size_t grow_size)
             return;
 
         // allocate a new array, copy the data
-        size_t new_capacity = Max(Capacity() * 2, raw_size);
+        size_t new_capacity = max(Capacity() * 2, raw_size);
 
         _ASSERTE(new_capacity >= grow_size * sizeof(StackTraceElement) + sizeof(ArrayHeader));
 

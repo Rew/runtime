@@ -578,7 +578,7 @@ public:
 
     static DWORD GetMaxTemporaryEntryPointsCount()
     {
-        SIZE_T maxPrecodeCodeSize = Max(FixupPrecode::CodeSize, StubPrecode::CodeSize);
+        SIZE_T maxPrecodeCodeSize = max(FixupPrecode::CodeSize, StubPrecode::CodeSize);
         SIZE_T count = GetOsPageSize() / maxPrecodeCodeSize;
         _ASSERTE(count < MAXDWORD);
         return (DWORD)count;

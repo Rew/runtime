@@ -11,6 +11,7 @@
 #include "PalRedhawk.h"
 #include "rhassert.h"
 
+#include <algorithm>
 
 #ifdef FEATURE_RX_THUNKS
 
@@ -63,7 +64,7 @@ COOP_PINVOKE_HELPER(int, RhpGetNumThunkBlocksPerMapping, ())
 
 COOP_PINVOKE_HELPER(int, RhpGetNumThunksPerBlock, ())
 {
-    return min(
+    return std::min(
         OS_PAGE_SIZE / THUNK_SIZE,                              // Number of thunks that can fit in a page
         (OS_PAGE_SIZE - POINTER_SIZE) / (POINTER_SIZE * 2)      // Number of pointer pairs, minus the jump stub cell, that can fit in a page
     );

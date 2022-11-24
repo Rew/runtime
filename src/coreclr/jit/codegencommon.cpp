@@ -2945,7 +2945,12 @@ void CodeGen::genFnPrologCalleeRegArgs(regNumber xtraReg, bool* pXtraRegClobbere
         }
 
 #endif // !UNIX_AMD64_ABI
-    } regArgTab[max(MAX_REG_ARG + 1, MAX_FLOAT_REG_ARG)] = {};
+    } 
+    #if MAX_FLOAT_REG_ARG > (MAX_REG_ARG + 1)
+        regArgTab[MAX_FLOAT_REG_ARG] = {};
+    #else
+        regArgTab[MAX_REG_ARG + 1] = {};
+    #endif
 
     unsigned   varNum;
     LclVarDsc* varDsc;
@@ -6549,7 +6554,7 @@ unsigned Compiler::GetHfaCount(CORINFO_CLASS_HANDLE hClass)
     var_types hfaType   = GetHfaType(hClass);
     unsigned  classSize = info.compCompHnd->getClassSize(hClass);
     // Note that the retail build issues a warning about a potential division by zero without the Max function
-    unsigned elemSize = Max((unsigned)1, EA_SIZE_IN_BYTES(emitActualTypeSize(hfaType)));
+    unsigned elemSize = max(1u, EA_SIZE_IN_BYTES(emitActualTypeSize(hfaType)));
     return classSize / elemSize;
 #endif // TARGET_ARM64
 }

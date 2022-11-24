@@ -16,9 +16,6 @@
 #ifndef _GC_INFO_DECODER_
 #define _GC_INFO_DECODER_
 
-#define _max(a, b) (((a) > (b)) ? (a) : (b))
-#define _min(a, b) (((a) < (b)) ? (a) : (b))
-
 #if !defined(TARGET_X86)
 #define USE_GC_INFO_DECODER
 #endif

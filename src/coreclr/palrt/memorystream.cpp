@@ -44,7 +44,7 @@ private:
             n = min(2 * n, n + n / 4 + 0x100000);
 
             // don't allocate tiny chunks
-            n = max(n, 0x100);
+            n = max(n, 0x100u);
 
             // compare with the hard limit
             nNewData = max(n, nNewData);
