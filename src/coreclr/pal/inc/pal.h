@@ -4289,9 +4289,6 @@ PALIMPORT char * __cdecl _strdup(const char *);
 
 #define alloca  __builtin_alloca
 
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-
 #endif // !PAL_STDCPP_COMPAT
 
 PALIMPORT PAL_NORETURN void __cdecl exit(int);
