@@ -844,7 +844,7 @@ namespace Microsoft.WebAssembly.Diagnostics
             var assemblyName = await context.SdbAgent.GetAssemblyNameFromModule(moduleId, token);
             DebugStore store = await LoadStore(sessionId, true, token);
             AssemblyInfo asm = store.GetAssemblyByName(assemblyName);
-            var methods = DebugStore.EnC(asm, meta_buf, pdb_buf);
+            var methods = DebugStore.EnC(context.SdbAgent, asm, meta_buf, pdb_buf);
             foreach (var method in methods)
             {
                 await ResetBreakpoint(sessionId, store, method, token);
@@ -1272,7 +1272,7 @@ namespace Microsoft.WebAssembly.Diagnostics
                 var pdb_data = string.IsNullOrEmpty(pdb_b64) ? null : Convert.FromBase64String(pdb_b64);
 
                 var context = GetContext(sessionId);
-                foreach (var source in store.Add(sessionId, assembly_name, assembly_data, pdb_data, token))
+                foreach (var source in store.Add(sessionId, assembly_data, pdb_data, token))
                 {
                     await OnSourceFileAdded(sessionId, source, context, token);
                 }
