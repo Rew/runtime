@@ -2115,7 +2115,7 @@ HRESULT CGrowableStream::EnsureCapacity(DWORD newLogicalSize)
             multSize = (DWORD)multSizeF;
         }
 
-        DWORD newBufferSize = max(max(newLogicalSize, multSize), addSize.Value());
+        DWORD newBufferSize = max(max(newLogicalSize, multSize), (DWORD)addSize.Value());
 
         char *tmp = new (nothrow) char[newBufferSize];
         if(tmp == NULL)

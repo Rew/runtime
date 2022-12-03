@@ -23,6 +23,7 @@
 #include <memory.h>
 
 #include <algorithm>
+#include <limits>
 #include <new>
 
 #ifdef TARGET_UNIX

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 //
 
+#include <algorithm>
 #include <windows.h>
 #include <inttypes.h>
 #include <assert.h>
@@ -169,7 +170,7 @@ void* VMToOSInterface::ReserveDoubleMappedMemory(void *mapperHandle, size_t offs
         else
         {
             // Try another section of memory
-            tryAddr = max(tryAddr + VIRTUAL_ALLOC_RESERVE_GRANULARITY,
+            tryAddr = std::max(tryAddr + VIRTUAL_ALLOC_RESERVE_GRANULARITY,
                           (BYTE*) mbInfo.BaseAddress + mbInfo.RegionSize);
         }
     }

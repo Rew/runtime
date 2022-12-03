@@ -42,8 +42,6 @@
 //
 #ifdef WINDOWS
 
-#define NOMINMAX
-
 #include <windows.h>
 #include <combaseapi.h>
 
