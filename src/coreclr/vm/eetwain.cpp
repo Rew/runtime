@@ -1076,7 +1076,7 @@ HRESULT EECodeManager::FixContextForEnC(PCONTEXT         pCtx,
             {
                 // This is an explicit (not special) var, so add its varNumber + 1 to our
                 // max count ("+1" because varNumber is zero-based).
-                oldNumVars = max(oldNumVars, unsigned(-ICorDebugInfo::UNKNOWN_ILNUM) + varNumber + 1);
+                oldNumVars = max(oldNumVars, unsigned(-ICorDebugInfo::UNKNOWN_ILNUM) + unsigned(varNumber) + 1u);
             }
         }
 
@@ -1129,7 +1129,7 @@ HRESULT EECodeManager::FixContextForEnC(PCONTEXT         pCtx,
             {
                 // This is an explicit (not special) var, so add its varNumber + 1 to our
                 // max count ("+1" because varNumber is zero-based).
-                newNumVars = max(newNumVars, unsigned(-ICorDebugInfo::UNKNOWN_ILNUM) + varNumber + 1);
+                newNumVars = max(newNumVars, unsigned(-ICorDebugInfo::UNKNOWN_ILNUM) + unsigned(varNumber) + 1u);
             }
         }
 

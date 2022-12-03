@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#include <algorithm>
 #include <cstdint>
 #include <cassert>
 #include <cstddef>
@@ -14,6 +15,8 @@
 #include "gcenv.windows.inl"
 #include "volatile.h"
 #include "gcconfig.h"
+
+using namespace std;
 
 GCSystemInfo g_SystemInfo;
 
@@ -1161,7 +1164,7 @@ bool GCToOSInterface::GetCPUGroupInfo(uint16_t* total_groups, uint32_t* max_proc
         DWORD currentProcsInGroup = 0;
         for (WORD i = 0; i < g_nGroups; i++)
         {
-            currentProcsInGroup = max(currentProcsInGroup, g_CPUGroupInfoArray[i].nr_active);
+            currentProcsInGroup = max(currentProcsInGroup, (DWORD)g_CPUGroupInfoArray[i].nr_active);
         }
         *max_procs_per_group = currentProcsInGroup;
         return true;

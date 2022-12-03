@@ -19,9 +19,11 @@
 
 #ifdef PAL_STDCPP_COMPAT
 #include <algorithm>
+#include <limits>
 #include <type_traits>
 #else
 #include "clr_std/algorithm"
+#include "clr_std/limits"
 #include "clr_std/type_traits"
 #endif
 

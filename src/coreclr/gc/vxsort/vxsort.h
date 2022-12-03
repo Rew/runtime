@@ -374,7 +374,7 @@ private:
         auto pivot = *right;
         // We do this here just in case we need to pre-align to the right
         // We end up
-        *right = std::numeric_limits<T>::Max();
+        *right = std::numeric_limits<T>::max();
 
         // Broadcast the selected pivot
         const TV P = MT::broadcast(pivot);
@@ -558,7 +558,7 @@ private:
         auto LT0 = MT::load_vec(preAlignedLeft);
         auto rtMask = MT::get_cmpgt_mask(RT0, P);
         auto ltMask = MT::get_cmpgt_mask(LT0, P);
-        const auto rtPopCountRightPart = max(_mm_popcnt_u32(rtMask), rightAlign);
+        const auto rtPopCountRightPart = std::max(_mm_popcnt_u32(rtMask), rightAlign);
         const auto ltPopCountRightPart = _mm_popcnt_u32(ltMask);
         const auto rtPopCountLeftPart  = N - rtPopCountRightPart;
         const auto ltPopCountLeftPart  = N - ltPopCountRightPart;
@@ -617,8 +617,8 @@ private:
      *        larger-than than all values contained within the provided array.
      */
     NOINLINE void sort(T* left, T* right,
-                       T left_hint = std::numeric_limits<T>::Min(),
-                       T right_hint = std::numeric_limits<T>::Max())
+                       T left_hint = std::numeric_limits<T>::min(),
+                       T right_hint = std::numeric_limits<T>::max())
     {
 //        init_isa_detection();
 
