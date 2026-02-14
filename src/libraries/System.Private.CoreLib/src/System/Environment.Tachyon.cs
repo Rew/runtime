@@ -12,7 +12,7 @@ namespace System
 {
     public static partial class Environment
     {
-        //public static bool UserInteractive => true;
+#pragma warning disable IDE0060
 
         private static string CurrentDirectoryCore
         {
@@ -34,9 +34,12 @@ namespace System
         public static long WorkingSet
         {
             get
-            {throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
             }
         }
+
+        private static bool IsPrivilegedProcessCore() => throw new NotImplementedException();
 
         public static string MachineName { get { throw new NotImplementedException(); } }
 
@@ -74,5 +77,6 @@ namespace System
             // Consider to use /proc/self/cmdline to get command line
             return Array.Empty<string>();
         }
+#pragma warning restore IDE0060
     }
 }

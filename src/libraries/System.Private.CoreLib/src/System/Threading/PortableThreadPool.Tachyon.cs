@@ -5,6 +5,11 @@ namespace System.Threading
 {
     internal sealed partial class PortableThreadPool
     {
+        private static partial class WorkerThread
+        {
+            private static bool IsIOPending => false;
+        }
+
         private struct CpuUtilizationReader
         {
             public int CurrentUtilization => throw new NotImplementedException();

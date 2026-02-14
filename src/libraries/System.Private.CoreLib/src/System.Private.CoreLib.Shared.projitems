@@ -2855,6 +2855,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\MemoryFailPoint.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Security\SecureString.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\LowLevelMonitor.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Mutex.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Thread.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\TimerQueue.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\AppDomain.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Buffer.Tachyon.cs" />
@@ -2863,11 +2865,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Guid.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\PasteArguments.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\TimeZoneInfo.Tachyon.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetsTachyonttt)' == 'true'">
-    <Compile Include="$(MSBuildThisFileDirectory)System\IO\FileStream.Tachyon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\VersioningHelper.Tachyon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Thread.Tachyon.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(SupportsX86Intrinsics)' == 'true'">
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Intrinsics\X86\Aes.cs" />
@@ -2978,7 +2975,8 @@
   <ItemGroup Condition="'$(FeaturePortableThreadPool)' == 'true'">
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\CompleteWaitThreadPoolWorkItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\ThreadPool.Portable.Windows.cs" Condition="'$(TargetsWindows)' == 'true'" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\ThreadPool.Unix.cs" Condition="'$(TargetsWindows)' != 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\ThreadPool.Tachyon.cs" Condition="'$(TargetsTachyon)' == 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\ThreadPool.Unix.cs" Condition="'$(TargetsWindows)' != 'true' and '$(TargetsTachyon)' != 'true'" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\PortableThreadPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\PortableThreadPool.Blocking.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\PortableThreadPool.GateThread.cs" />

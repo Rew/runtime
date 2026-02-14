@@ -124,5 +124,11 @@ namespace System.IO.Enumeration
         /// Returns the full path of the find result.
         /// </summary>
         public string ToFullPath() => throw new NotImplementedException();
+
+        private static string Join(
+            ReadOnlySpan<char> originalRootDirectory,
+            ReadOnlySpan<char> relativePath,
+            ReadOnlySpan<char> fileName) =>
+            Path.Join(originalRootDirectory, relativePath, fileName);
     }
 }

@@ -17,9 +17,7 @@ namespace System.Threading
 
         public bool WaitCore(int timeoutMs) => throw new NotImplementedException();
 
-        private static int WaitNative(SafeWaitHandle handle, int timeoutMs) => throw new NotImplementedException();
-
-        public void ReleaseCore(int count) => throw new NotImplementedException();
+        protected override void ReleaseCore(int count) => throw new NotImplementedException();
 
         public void Dispose() => throw new NotImplementedException();
     }
