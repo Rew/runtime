@@ -7,7 +7,7 @@ if "%CONFIG%"=="" set CONFIG=Debug
 set PKG_VERSION=%2
 if "%PKG_VERSION%"=="" set PKG_VERSION=11.0.0-dev
 
-set ARCHITECTURES=x86 x64
+set ARCHITECTURES=x86 x64 arm arm64
 
 echo ============================================================
 echo  Tachyon .NET Framework Build
@@ -50,7 +50,7 @@ set PKG_OUT=%REPO_ROOT%\artifacts\packages\%CONFIG%\tachyon
     -o "%PKG_OUT%" ^
     /p:PackageVersion=%PKG_VERSION% ^
     /p:TachyonConfig=%CONFIG% ^
-    /p:TachyonArchitectures="x86;x64"
+    /p:TachyonArchitectures="x86;x64;arm;arm64"
 
 if errorlevel 1 (
     echo ERROR: Packaging failed.

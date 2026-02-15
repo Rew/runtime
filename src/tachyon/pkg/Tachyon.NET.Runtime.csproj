@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(PackageVersion)' == ''">11.0.0-dev</PackageVersion>
 
     <!-- Architectures to include (semicolon-separated). Override with /p:TachyonArchitectures=x86 for single-arch. -->
-    <TachyonArchitectures Condition="'$(TachyonArchitectures)' == ''">x86;x64</TachyonArchitectures>
+    <TachyonArchitectures Condition="'$(TachyonArchitectures)' == ''">x86;x64;arm;arm64</TachyonArchitectures>
 
     <TachyonRefDir>$(ArtifactsDir)bin\microsoft.netcore.app.ref\ref\net11.0\</TachyonRefDir>
   </PropertyGroup>
