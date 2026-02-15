@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <CompileUsingReferenceAssemblies>false</CompileUsingReferenceAssemblies>
+    <DefineConstants Condition="'$(TargetsTachyon)' == 'true'">$(DefineConstants);TARGET_TACHYON</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

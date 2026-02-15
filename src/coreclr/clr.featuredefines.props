@@ -41,8 +41,6 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetsTachyon)' == 'true'">
-        <FeatureXplatEventSource>true</FeatureXplatEventSource>
-        
         <FeatureXplatEventSource>false</FeatureXplatEventSource>
 
         <FeatureArrayStubAsIL>true</FeatureArrayStubAsIL>

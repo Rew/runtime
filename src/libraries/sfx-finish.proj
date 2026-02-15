@@ -117,6 +117,7 @@
   <Target Name="TrimSharedFrameworkAssemblies"
           AfterTargets="Build"
           DependsOnTargets="ResolveProjectReferences;GetTrimSharedFrameworkAssembliesInputs;PrepareForAssembliesTrim"
+          Condition="'$(TargetsTachyon)' != 'true'"
           Inputs="@(SharedFrameworkAssembly);@(SharedFrameworkSuppressionsXml);$(ILLinkTasksAssembly)"
           Outputs="$(SharedFrameworkAssembliesTrimMarkerFile)">
     <Message Text="$(MSBuildProjectName) -> Trimming $(TargetRid) shared framework assemblies with ILLinker..." Importance="high" />
