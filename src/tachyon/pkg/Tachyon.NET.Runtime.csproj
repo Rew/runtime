@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Tachyon.NET.Runtime</PackageId>
     <Authors>Rew</Authors>
-    <Description>Tachyon .NET managed runtime framework - CoreLib and managed framework libraries for the Tachyon embedded runtime (x86).</Description>
+    <Description>Tachyon .NET managed runtime framework - CoreLib and managed framework libraries for the Tachyon embedded runtime.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <!-- Don't compile anything - this is a packaging-only project -->
@@ -18,22 +18,37 @@
     <!-- Derive artifact paths from repo root -->
     <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', '..', '..'))</RepoRoot>
     <ArtifactsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts'))</ArtifactsDir>
-    <TachyonArch Condition="'$(TachyonArch)' == ''">x86</TachyonArch>
     <TachyonConfig Condition="'$(TachyonConfig)' == ''">Debug</TachyonConfig>
     <PackageVersion Condition="'$(PackageVersion)' == ''">11.0.0-dev</PackageVersion>
 
-    <TachyonRuntimeDir>$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-$(TachyonArch)\</TachyonRuntimeDir>
-    <TachyonCorelibDir>$(ArtifactsDir)bin\coreclr\tachyon.$(TachyonArch).$(TachyonConfig)\IL\</TachyonCorelibDir>
+    <!-- Architectures to include (semicolon-separated). Override with /p:TachyonArchitectures=x86 for single-arch. -->
+    <TachyonArchitectures Condition="'$(TachyonArchitectures)' == ''">x86;x64</TachyonArchitectures>
+
     <TachyonRefDir>$(ArtifactsDir)bin\microsoft.netcore.app.ref\ref\net11.0\</TachyonRefDir>
   </PropertyGroup>
 
-  <!-- Implementation assemblies: CoreLib + all framework libs -->
-  <ItemGroup>
-    <None Include="$(TachyonRuntimeDir)*.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
-    <None Include="$(TachyonCorelibDir)System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
+  <!-- Per-architecture implementation assemblies -->
+  <ItemGroup Condition="$(TachyonArchitectures.Contains('x86'))">
+    <None Include="$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-x86\*.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
+    <None Include="$(ArtifactsDir)bin\coreclr\tachyon.x86.$(TachyonConfig)\IL\System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
   </ItemGroup>
 
-  <!-- Reference assemblies for compilation -->
+  <ItemGroup Condition="$(TachyonArchitectures.Contains('x64'))">
+    <None Include="$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-x64\*.dll" Pack="true" PackagePath="runtimes/tachyon-x64/lib/net11.0/" />
+    <None Include="$(ArtifactsDir)bin\coreclr\tachyon.x64.$(TachyonConfig)\IL\System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-x64/lib/net11.0/" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TachyonArchitectures.Contains('arm'))">
+    <None Include="$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-arm\*.dll" Pack="true" PackagePath="runtimes/tachyon-arm/lib/net11.0/" />
+    <None Include="$(ArtifactsDir)bin\coreclr\tachyon.arm.$(TachyonConfig)\IL\System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-arm/lib/net11.0/" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TachyonArchitectures.Contains('arm64'))">
+    <None Include="$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-arm64\*.dll" Pack="true" PackagePath="runtimes/tachyon-arm64/lib/net11.0/" />
+    <None Include="$(ArtifactsDir)bin\coreclr\tachyon.arm64.$(TachyonConfig)\IL\System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-arm64/lib/net11.0/" />
+  </ItemGroup>
+
+  <!-- Reference assemblies for compilation (architecture-neutral) -->
   <ItemGroup>
     <None Include="$(TachyonRefDir)*.dll" Pack="true" PackagePath="ref/net11.0/" />
   </ItemGroup>

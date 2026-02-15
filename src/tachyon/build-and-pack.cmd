@@ -1,37 +1,48 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
 set REPO_ROOT=%~dp0..\..
 set CONFIG=%1
 if "%CONFIG%"=="" set CONFIG=Debug
-set ARCH=%2
-if "%ARCH%"=="" set ARCH=x86
-set PKG_VERSION=%3
+set PKG_VERSION=%2
 if "%PKG_VERSION%"=="" set PKG_VERSION=11.0.0-dev
+
+set ARCHITECTURES=x86 x64
 
 echo ============================================================
 echo  Tachyon .NET Framework Build
-echo  Configuration: %CONFIG%  Architecture: %ARCH%
+echo  Configuration: %CONFIG%
+echo  Architectures: %ARCHITECTURES%
 echo ============================================================
 
-echo.
-echo [1/3] Building CoreLib...
-call %REPO_ROOT%\build.cmd -subset clr.corelib -os tachyon -arch %ARCH% -c %CONFIG%
-if errorlevel 1 (
-    echo ERROR: CoreLib build failed.
-    exit /b 1
+set STEP=0
+set TOTAL=0
+for %%A in (%ARCHITECTURES%) do set /a TOTAL+=2
+set /a TOTAL+=1
+
+for %%A in (%ARCHITECTURES%) do (
+    set /a STEP+=1
+    echo.
+    echo [!STEP!/%TOTAL%] Building CoreLib [%%A]...
+    call %REPO_ROOT%\build.cmd -subset clr.corelib -os tachyon -arch %%A -c %CONFIG%
+    if errorlevel 1 (
+        echo ERROR: CoreLib build failed for %%A.
+        exit /b 1
+    )
+
+    set /a STEP+=1
+    echo.
+    echo [!STEP!/%TOTAL%] Building framework libraries [%%A]...
+    call %REPO_ROOT%\build.cmd -subset libs.sfx -os tachyon -arch %%A -c %CONFIG%
+    if errorlevel 1 (
+        echo ERROR: Framework library build failed for %%A.
+        exit /b 1
+    )
 )
 
+set /a STEP+=1
 echo.
-echo [2/3] Building framework libraries...
-call %REPO_ROOT%\build.cmd -subset libs.sfx -os tachyon -arch %ARCH% -c %CONFIG%
-if errorlevel 1 (
-    echo ERROR: Framework library build failed.
-    exit /b 1
-)
-
-echo.
-echo [3/3] Packaging...
+echo [%STEP%/%TOTAL%] Packaging...
 
 set PKG_OUT=%REPO_ROOT%\artifacts\packages\%CONFIG%\tachyon
 
@@ -39,7 +50,7 @@ set PKG_OUT=%REPO_ROOT%\artifacts\packages\%CONFIG%\tachyon
     -o "%PKG_OUT%" ^
     /p:PackageVersion=%PKG_VERSION% ^
     /p:TachyonConfig=%CONFIG% ^
-    /p:TachyonArch=%ARCH%
+    /p:TachyonArchitectures="x86;x64"
 
 if errorlevel 1 (
     echo ERROR: Packaging failed.
