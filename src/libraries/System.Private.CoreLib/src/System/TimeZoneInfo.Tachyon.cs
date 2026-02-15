@@ -43,7 +43,7 @@ namespace System
             throw new NotImplementedException();
         }
 
-        private static void PopulateAllSystemTimeZones(CachedData cachedData)
+        private static Dictionary<string, TimeZoneInfo> PopulateAllSystemTimeZones(CachedData cachedData)
         {
             throw new NotImplementedException();
         }

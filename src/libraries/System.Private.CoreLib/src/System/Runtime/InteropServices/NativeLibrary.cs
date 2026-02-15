@@ -256,7 +256,7 @@ namespace System.Runtime.InteropServices
 #elif TARGET_UNIX
             result = Interop.Sys.GetDefaultSearchOrderPseudoHandle();
 #else
-            if(result == IntPtr.Zero) throw new PlatformNotSupportedException();
+            if (result == IntPtr.Zero) throw new PlatformNotSupportedException();
 #endif
             // I don't know when a failure case can occur here, but checking for it and throwing an exception
             // if we encounter it.

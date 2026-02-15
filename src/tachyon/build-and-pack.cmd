@@ -7,7 +7,7 @@ if "%CONFIG%"=="" set CONFIG=Debug
 set ARCH=%2
 if "%ARCH%"=="" set ARCH=x86
 set PKG_VERSION=%3
-if "%PKG_VERSION%"=="" set PKG_VERSION=9.0.0-dev
+if "%PKG_VERSION%"=="" set PKG_VERSION=11.0.0-dev
 
 echo ============================================================
 echo  Tachyon .NET Framework Build

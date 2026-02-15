@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 
@@ -65,6 +66,14 @@ namespace System
         {
             throw new NotImplementedException();
         }
+
+        [UnsupportedOSPlatform("ios")]
+        [UnsupportedOSPlatform("tvos")]
+        [UnsupportedOSPlatform("browser")]
+        [SupportedOSPlatform("maccatalyst")]
+        public static ProcessCpuUsage CpuUsage => throw new NotImplementedException();
+
+        public static long TickCount64 => throw new NotImplementedException();
 
         private static int GetProcessId() => throw new NotImplementedException();
 

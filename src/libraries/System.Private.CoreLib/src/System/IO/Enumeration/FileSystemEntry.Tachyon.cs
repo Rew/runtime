@@ -9,62 +9,7 @@ namespace System.IO.Enumeration
     /// Lower level view of FileSystemInfo used for processing and filtering find results.
     /// </summary>
     public unsafe ref partial struct FileSystemEntry
-   {
-        /*private Interop.Sys.DirectoryEntry _directoryEntry;
-        private FileStatus _status;
-        private Span<char> _pathBuffer;
-        private ReadOnlySpan<char> _fullPath;
-        private ReadOnlySpan<char> _fileName;
-        private fixed char _fileNameBuffer[Interop.Sys.DirectoryEntry.NameBufferSize];
-
-        internal static FileAttributes Initialize(
-            ref FileSystemEntry entry,
-            Interop.Sys.DirectoryEntry directoryEntry,
-            ReadOnlySpan<char> directory,
-            ReadOnlySpan<char> rootDirectory,
-            ReadOnlySpan<char> originalRootDirectory,
-            Span<char> pathBuffer)
-        {
-            entry._directoryEntry = directoryEntry;
-            entry.Directory = directory;
-            entry.RootDirectory = rootDirectory;
-            entry.OriginalRootDirectory = originalRootDirectory;
-            entry._pathBuffer = pathBuffer;
-            entry._fullPath = ReadOnlySpan<char>.Empty;
-            entry._fileName = ReadOnlySpan<char>.Empty;
-            entry._status.InvalidateCaches();
-            entry._status.InitiallyDirectory = false;
-
-            bool isDirectory = directoryEntry.InodeType == Interop.Sys.NodeType.DT_DIR;
-            bool isSymlink   = directoryEntry.InodeType == Interop.Sys.NodeType.DT_LNK;
-            bool isUnknown   = directoryEntry.InodeType == Interop.Sys.NodeType.DT_UNKNOWN;
-
-            if (isDirectory)
-            {
-                entry._status.InitiallyDirectory = true;
-            }
-            else if (isSymlink)
-            {
-                entry._status.InitiallyDirectory = entry._status.IsDirectory(entry.FullPath, continueOnError: true);
-            }
-            else if (isUnknown)
-            {
-                entry._status.InitiallyDirectory = entry._status.IsDirectory(entry.FullPath, continueOnError: true);
-                if (entry._status.IsSymbolicLink(entry.FullPath, continueOnError: true))
-                {
-                    entry._directoryEntry.InodeType = Interop.Sys.NodeType.DT_LNK;
-                }
-            }
-
-            FileAttributes attributes = default;
-            if (entry.IsSymbolicLink)
-                attributes |= FileAttributes.ReparsePoint;
-            if (entry.IsDirectory)
-                attributes |= FileAttributes.Directory;
-
-            return attributes;
-        }*/
-
+    {
         private ReadOnlySpan<char> FullPath
         {
             get

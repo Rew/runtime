@@ -1,16 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace System.Diagnostics
-{
-    public partial class Stopwatch
-    {
-        private static long GetFrequency()
-        {
-            throw new NotImplementedException();
-        }
+using System;
 
-        public static long GetTimestamp()
+namespace Microsoft.Win32.SafeHandles
+{
+    public sealed partial class SafeWaitHandle : SafeHandleZeroOrMinusOneIsInvalid
+    {
+        protected override bool ReleaseHandle()
         {
             throw new NotImplementedException();
         }

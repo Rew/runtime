@@ -18,14 +18,19 @@ namespace System.Threading
 
         // Indicates whether the thread pool should yield the thread from the dispatch loop to the runtime periodically so that
         // the runtime may use the thread for processing other work.
-        internal static bool YieldFromDispatchLoop => false;
-/*
-#if !CORECLR
-        internal static bool EnsureConfigInitialized() => true;
-#endif
-*/
-        internal static object GetOrCreateThreadLocalCompletionCountObject() =>
-            PortableThreadPool.ThreadPoolInstance.GetOrCreateThreadLocalCompletionCountObject();
+        internal static bool YieldFromDispatchLoop(int currentTickCount)
+        {
+            _ = currentTickCount;
+            return false;
+        }
+
+        internal static ThreadInt64PersistentCounter.ThreadLocalNode? GetOrCreateThreadLocalCompletionCountNode() =>
+            PortableThreadPool.ThreadPoolInstance.GetOrCreateThreadLocalCompletionCountNode();
+
+        internal static unsafe void EnsureWorkerRequested()
+        {
+            PortableThreadPool.ThreadPoolInstance.EnsureWorkerRequested();
+        }
 
         public static bool SetMaxThreads(int workerThreads, int completionPortThreads) =>
             PortableThreadPool.ThreadPoolInstance.SetMaxThreads(workerThreads, completionPortThreads);
@@ -63,16 +68,8 @@ namespace System.Threading
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool NotifyWorkItemComplete(object threadLocalCompletionCountObject, int currentTimeMs) =>
-            PortableThreadPool.ThreadPoolInstance.NotifyWorkItemComplete(threadLocalCompletionCountObject, currentTimeMs);
-
-        /// <summary>
-        /// This method is called to request a new thread pool worker to handle pending work.
-        /// </summary>
-        internal static unsafe void RequestWorkerThread()
-        {
-            PortableThreadPool.ThreadPoolInstance.RequestWorker();
-        }
+        internal static bool NotifyWorkItemComplete(ThreadInt64PersistentCounter.ThreadLocalNode threadLocalCompletionCountNode, int currentTimeMs) =>
+            PortableThreadPool.ThreadPoolInstance.NotifyWorkItemComplete(threadLocalCompletionCountNode, currentTimeMs);
 
         internal static void ReportThreadStatus(bool isWorking)
         {
@@ -87,30 +84,13 @@ namespace System.Threading
              bool executeOnlyOnce,
              bool flowExecutionContext)
         {
-            Thread.ThrowIfNoThreadStart();
+            ArgumentNullException.ThrowIfNull(callBack);
             return PortableThreadPool.RegisterWaitForSingleObject(waitObject, callBack, state, millisecondsTimeOutInterval, executeOnlyOnce, flowExecutionContext);
         }
 
-        /*[CLSCompliant(false)]
-        [SupportedOSPlatform("windows")]
-        public static unsafe bool UnsafeQueueNativeOverlapped(NativeOverlapped* overlapped) =>
-            throw new PlatformNotSupportedException(SR.PlatformNotSupported_OverlappedIO);
-
-        [Obsolete("ThreadPool.BindHandle(IntPtr) has been deprecated. Use ThreadPool.BindHandle(SafeHandle) instead.")]
-        [SupportedOSPlatform("windows")]
-        public static bool BindHandle(IntPtr osHandle) =>
-            throw new PlatformNotSupportedException(SR.PlatformNotSupported_OverlappedIO);
-
-        [SupportedOSPlatform("windows")]
-        public static bool BindHandle(SafeHandle osHandle) =>
-            throw new PlatformNotSupportedException(SR.PlatformNotSupported_OverlappedIO);
-*/
         /// <summary>
         /// Gets the number of thread pool threads that currently exist.
         /// </summary>
-        /// <remarks>
-        /// For a thread pool implementation that may have different types of threads, the count includes all types.
-        /// </remarks>
         public static int ThreadCount
         {
             get
@@ -122,9 +102,6 @@ namespace System.Threading
         /// <summary>
         /// Gets the number of work items that have been processed so far.
         /// </summary>
-        /// <remarks>
-        /// For a thread pool implementation that may have different types of work items, the count includes all types.
-        /// </remarks>
         public static long CompletedWorkItemCount
         {
             get
@@ -132,6 +109,5 @@ namespace System.Threading
                 return PortableThreadPool.ThreadPoolInstance.CompletedWorkItemCount;
             }
         }
-
     }
 }

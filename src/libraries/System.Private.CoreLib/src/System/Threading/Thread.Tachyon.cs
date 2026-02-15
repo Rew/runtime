@@ -13,5 +13,11 @@ namespace System.Threading
         internal static void UninterruptibleSleep0() => Thread.Yield();
 
         internal static int GetCurrentProcessorNumber() => throw new NotImplementedException();
+
+        private static void SleepInternal(int millisecondsTimeout) => throw new NotImplementedException();
+
+#if !MONO
+        private bool JoinInternal(int millisecondsTimeout) => throw new NotImplementedException();
+#endif
     }
 }

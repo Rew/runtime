@@ -20,22 +20,22 @@
     <ArtifactsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts'))</ArtifactsDir>
     <TachyonArch Condition="'$(TachyonArch)' == ''">x86</TachyonArch>
     <TachyonConfig Condition="'$(TachyonConfig)' == ''">Debug</TachyonConfig>
-    <PackageVersion Condition="'$(PackageVersion)' == ''">9.0.0-dev</PackageVersion>
+    <PackageVersion Condition="'$(PackageVersion)' == ''">11.0.0-dev</PackageVersion>
 
-    <TachyonRuntimeDir>$(ArtifactsDir)bin\runtime\net9.0-tachyon-$(TachyonConfig)-$(TachyonArch)\</TachyonRuntimeDir>
+    <TachyonRuntimeDir>$(ArtifactsDir)bin\runtime\net11.0-tachyon-$(TachyonConfig)-$(TachyonArch)\</TachyonRuntimeDir>
     <TachyonCorelibDir>$(ArtifactsDir)bin\coreclr\tachyon.$(TachyonArch).$(TachyonConfig)\IL\</TachyonCorelibDir>
-    <TachyonRefDir>$(ArtifactsDir)bin\microsoft.netcore.app.ref\ref\net9.0\</TachyonRefDir>
+    <TachyonRefDir>$(ArtifactsDir)bin\microsoft.netcore.app.ref\ref\net11.0\</TachyonRefDir>
   </PropertyGroup>
 
   <!-- Implementation assemblies: CoreLib + all framework libs -->
   <ItemGroup>
-    <None Include="$(TachyonRuntimeDir)*.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net9.0/" />
-    <None Include="$(TachyonCorelibDir)System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net9.0/" />
+    <None Include="$(TachyonRuntimeDir)*.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
+    <None Include="$(TachyonCorelibDir)System.Private.CoreLib.dll" Pack="true" PackagePath="runtimes/tachyon-x86/lib/net11.0/" />
   </ItemGroup>
 
   <!-- Reference assemblies for compilation -->
   <ItemGroup>
-    <None Include="$(TachyonRefDir)*.dll" Pack="true" PackagePath="ref/net9.0/" />
+    <None Include="$(TachyonRefDir)*.dll" Pack="true" PackagePath="ref/net11.0/" />
   </ItemGroup>
 
 </Project>

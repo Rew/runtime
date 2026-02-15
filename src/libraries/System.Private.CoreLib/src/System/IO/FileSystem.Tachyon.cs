@@ -75,6 +75,8 @@ namespace System.IO
 
         internal static FileSystemInfo? ResolveLinkTarget(string linkPath, bool returnFinalTarget, bool isDirectory) => throw new NotImplementedException();
 
+        internal static void CreateHardLink(string path, string pathToTarget) => throw new NotImplementedException();
+
         public static bool DirectoryExists(ReadOnlySpan<char> fullPath) => throw new NotImplementedException();
 
         public static bool FileExists(ReadOnlySpan<char> fullPath) => throw new NotImplementedException();

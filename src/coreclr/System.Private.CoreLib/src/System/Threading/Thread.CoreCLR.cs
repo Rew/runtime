@@ -433,6 +433,8 @@ namespace System.Threading
         {
 #if TARGET_UNIX || TARGET_BROWSER || TARGET_WASI
             WaitSubsystem.Interrupt(this);
+#elif TARGET_TACHYON
+            throw new NotImplementedException();
 #else
             Interrupt(GetNativeHandle());
             GC.KeepAlive(this);

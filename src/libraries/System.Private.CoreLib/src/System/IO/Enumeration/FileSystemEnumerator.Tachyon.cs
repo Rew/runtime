@@ -22,32 +22,20 @@ namespace System.IO.Enumeration
 
         private void Init() => throw new NotImplementedException();
 
+        internal FileSystemEnumerator(string directory, bool isNormalized, EnumerationOptions? options, string? expression) :
+            this(directory, isNormalized, options)
+        {
+            _ = expression; // unused
+        }
+
         private IntPtr CreateDirectoryHandle(string path, bool ignoreNotFound = false) => throw new NotImplementedException();
 
         private void CloseDirectoryHandle() => throw new NotImplementedException();
 
         private unsafe void FindNextEntry() => throw new NotImplementedException();
 
-        private unsafe void FindNextEntry(byte* entryBufferPtr, int bufferLength) => throw new NotImplementedException();
-
         private bool DequeueNextDirectory() => throw new NotImplementedException();
 
         private void InternalDispose(bool disposing) => throw new NotImplementedException();
-
-        // The largest supported path on Unix is 4K bytes of UTF-8 (most only support 1K)
-        /*private const int StandardBufferSize = 4096;
-
-        private readonly object _lock = new object();
-
-        private IntPtr _directoryHandle;
-        private Queue<(string Path, int RemainingDepth)>? _pending;
-
-
-        // Used for creating full paths
-        private char[]? _pathBuffer;
-        // Used to get the raw entry data
-        private byte[]? _entryBuffer;
-
-*/
     }
 }

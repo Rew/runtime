@@ -313,7 +313,7 @@ while [[ $# -gt 0 ]]; do
         haiku)
           os="haiku" ;;
         tachyon)
-          os="Tachyon" ;;
+          os="tachyon" ;;
         *)
           echo "Unsupported target OS '$2'."
           echo "Try 'build.sh --help' for values supported by '--os'."

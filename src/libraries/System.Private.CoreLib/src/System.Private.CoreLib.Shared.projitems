@@ -2829,6 +2829,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Internal\Console.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft\Win32\SafeHandles\SafeFileHandle.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Microsoft\Win32\SafeHandles\SafeWaitHandle.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\Tracing\RuntimeEventSourceHelper.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\DebugProvider.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\Stopwatch.Tachyon.cs" />
@@ -2847,6 +2848,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\IO\Enumeration\FileSystemEntry.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\IO\Enumeration\FileSystemEnumerator.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\Marshal.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeLibrary.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeMemory.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\PosixSignalRegistration.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\RuntimeInformation.Tachyon.cs" />
@@ -2855,7 +2857,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\MemoryFailPoint.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Security\SecureString.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\LowLevelMonitor.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\EventWaitHandle.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Mutex.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Semaphore.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\WaitHandle.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Thread.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\TimerQueue.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\AppDomain.Tachyon.cs" />

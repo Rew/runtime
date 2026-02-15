@@ -3,24 +3,24 @@
 
 namespace System.Threading
 {
-    public sealed partial class Mutex
+    public sealed partial class Semaphore
     {
-        private void CreateMutexCore(bool initiallyOwned)
+        private void CreateSemaphoreCore(int initialCount, int maximumCount)
         {
             throw new NotImplementedException();
         }
 
-        private void CreateMutexCore(bool initiallyOwned, string? name, NamedWaitHandleOptionsInternal options, out bool createdNew)
+        private void CreateSemaphoreCore(int initialCount, int maximumCount, string? name, NamedWaitHandleOptionsInternal options, out bool createdNew)
         {
             throw new NotImplementedException();
         }
 
-        private static OpenExistingResult OpenExistingWorker(string name, NamedWaitHandleOptionsInternal options, out Mutex? result)
+        private static OpenExistingResult OpenExistingWorker(string name, NamedWaitHandleOptionsInternal options, out Semaphore? result)
         {
             throw new NotImplementedException();
         }
 
-        public void ReleaseMutex()
+        private int ReleaseCore(int releaseCount)
         {
             throw new NotImplementedException();
         }
