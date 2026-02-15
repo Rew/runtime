@@ -1,0 +1,66 @@
+name: Tachyon .NET Runtime
+
+on:
+  push:
+    branches: [TachyonSupport]
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build configuration'
+        default: 'Release'
+        type: choice
+        options: [Release, Debug]
+      version:
+        description: 'Package version (e.g. 11.0.0-preview.1)'
+        default: '11.0.0-dev'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build CoreLib + framework libraries for each architecture
+      - name: Build x86
+        run: |
+          ./build.cmd -subset clr.corelib -os tachyon -arch x86 -c ${{ inputs.configuration || 'Release' }}
+          ./build.cmd -subset libs.sfx -os tachyon -arch x86 -c ${{ inputs.configuration || 'Release' }}
+
+      - name: Build x64
+        run: |
+          ./build.cmd -subset clr.corelib -os tachyon -arch x64 -c ${{ inputs.configuration || 'Release' }}
+          ./build.cmd -subset libs.sfx -os tachyon -arch x64 -c ${{ inputs.configuration || 'Release' }}
+
+      - name: Build arm
+        run: |
+          ./build.cmd -subset clr.corelib -os tachyon -arch arm -c ${{ inputs.configuration || 'Release' }}
+          ./build.cmd -subset libs.sfx -os tachyon -arch arm -c ${{ inputs.configuration || 'Release' }}
+
+      - name: Build arm64
+        run: |
+          ./build.cmd -subset clr.corelib -os tachyon -arch arm64 -c ${{ inputs.configuration || 'Release' }}
+          ./build.cmd -subset libs.sfx -os tachyon -arch arm64 -c ${{ inputs.configuration || 'Release' }}
+
+      # Pack into NuGet
+      - name: Pack NuGet
+        run: |
+          $version = "${{ inputs.version || '11.0.0-dev' }}"
+          $config = "${{ inputs.configuration || 'Release' }}"
+          .\.dotnet\dotnet.exe pack src\tachyon\pkg\Tachyon.NET.Runtime.csproj `
+            -o artifacts\packages\$config\tachyon `
+            /p:PackageVersion=$version `
+            /p:TachyonConfig=$config
+
+      # Publish to GitHub Packages
+      - name: Push to GitHub Packages
+        run: |
+          $config = "${{ inputs.configuration || 'Release' }}"
+          $version = "${{ inputs.version || '11.0.0-dev' }}"
+          .\.dotnet\dotnet.exe nuget push `
+            "artifacts\packages\$config\tachyon\Tachyon.NET.Runtime.$version.nupkg" `
+            --source "https://nuget.pkg.github.com/Rew/index.json" `
+            --api-key ${{ secrets.GITHUB_TOKEN }}
