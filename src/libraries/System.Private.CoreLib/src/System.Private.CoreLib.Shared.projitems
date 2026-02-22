@@ -2824,6 +2824,9 @@
     <Compile Include="$(CommonPath)Interop\Tachyon\Interop.Libraries.cs">
       <Link>Common\Interop\Tachyon\Interop.Libraries.cs</Link>
     </Compile>
+    <Compile Include="$(CommonPath)Interop\Tachyon\Tachyon.NativeMemory.cs">
+      <Link>Common\Interop\Tachyon\Tachyon.NativeMemory.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)System\IO\PathInternal.Tachyon.cs">
       <Link>Common\System\IO\PathInternal.Tachyon.cs</Link>
     </Compile>

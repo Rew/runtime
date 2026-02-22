@@ -23,7 +23,20 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void* AlignedAlloc(nuint byteCount, nuint alignment)
         {
-            throw new NotImplementedException();
+            if (!BitOperations.IsPow2(alignment))
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Argument_AlignmentMustBePow2);
+            }
+
+            // Unlike the C standard and POSIX, Tachyon does not requires size to be a multiple of alignment. However, we do want an "empty" allocation for zero
+            void* result = Tachyon.NativeMemory.AlignedAlloc((byteCount != 0) ? byteCount : 1, alignment);
+
+            if (result == null)
+            {
+                ThrowHelper.ThrowOutOfMemoryException();
+            }
+
+            return result;
         }
 
         /// <summary>Frees an aligned block of memory.</summary>
@@ -35,7 +48,10 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void AlignedFree(void* ptr)
         {
-            throw new NotImplementedException();
+            if (ptr != null)
+            {
+                Tachyon.NativeMemory.AlignedFree(ptr);
+            }
         }
 
         /// <summary>Reallocates an aligned block of memory of the specified size and alignment, in bytes.</summary>
@@ -54,7 +70,20 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void* AlignedRealloc(void* ptr, nuint byteCount, nuint alignment)
         {
-            throw new NotImplementedException();
+            if (!BitOperations.IsPow2(alignment))
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Argument_AlignmentMustBePow2);
+            }
+
+            // Unlike the C standard and POSIX, Tachyon does not requires size to be a multiple of alignment. However, we do want an "empty" allocation for zero
+            void* result = Tachyon.NativeMemory.AlignedRealloc(ptr, (byteCount != 0) ? byteCount : 1, alignment);
+
+            if (result == null)
+            {
+                ThrowHelper.ThrowOutOfMemoryException();
+            }
+
+            return result;
         }
 
         /// <summary>Allocates a block of memory of the specified size, in bytes.</summary>
@@ -68,7 +97,14 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void* Alloc(nuint byteCount)
         {
-            throw new NotImplementedException();
+            void* result = Tachyon.NativeMemory.Alloc(byteCount);
+
+            if (result == null)
+            {
+                ThrowHelper.ThrowOutOfMemoryException();
+            }
+
+            return result;
         }
 
         /// <summary>Allocates and zeroes a block of memory of the specified size, in elements.</summary>
@@ -83,7 +119,15 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void* AllocZeroed(nuint elementCount, nuint elementSize)
         {
-            throw new NotImplementedException();
+            // The Tachyon implementation handles num == 0 && size == 0 as we expect
+            void* result = Tachyon.NativeMemory.AllocZeroed(elementCount, elementSize);
+
+            if (result == null)
+            {
+                ThrowHelper.ThrowOutOfMemoryException();
+            }
+
+            return result;
         }
 
         /// <summary>Frees a block of memory.</summary>
@@ -95,7 +139,10 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void Free(void* ptr)
         {
-            throw new NotImplementedException();
+            if (ptr != null)
+            {
+                Tachyon.NativeMemory.Free(ptr);
+            }
         }
 
         /// <summary>Reallocates a block of memory to be the specified size, in bytes.</summary>
@@ -111,7 +158,15 @@ namespace System.Runtime.InteropServices
         [CLSCompliant(false)]
         public static void* Realloc(void* ptr, nuint byteCount)
         {
-            throw new NotImplementedException();
+            // The C standard does not define what happens when size == 0, we want an "empty" allocation
+            void* result = Tachyon.NativeMemory.Realloc(ptr, (byteCount != 0) ? byteCount : 1);
+
+            if (result == null)
+            {
+                ThrowHelper.ThrowOutOfMemoryException();
+            }
+
+            return result;
         }
     }
 }
