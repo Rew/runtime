@@ -5,7 +5,10 @@ set REPO_ROOT=%~dp0..\..
 set CONFIG=%1
 if "%CONFIG%"=="" set CONFIG=Debug
 set PKG_VERSION=%2
-if "%PKG_VERSION%"=="" set PKG_VERSION=11.0.0-dev
+if "%PKG_VERSION%"=="" (
+    for /f %%h in ('git -C "%REPO_ROOT%" rev-parse --short HEAD') do set GIT_SHORT_SHA=%%h
+    set PKG_VERSION=11.0.0-dev.!GIT_SHORT_SHA!
+)
 
 set ARCHITECTURES=x86 x64 arm arm64
 

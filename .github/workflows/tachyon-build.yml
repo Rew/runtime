@@ -48,7 +48,7 @@ jobs:
       # Pack into NuGet
       - name: Pack NuGet
         run: |
-          $version = "${{ inputs.version || '11.0.0-dev' }}"
+          $version = "${{ inputs.version || format('11.0.0-dev.{0}', github.run_number) }}"
           $config = "${{ inputs.configuration || 'Release' }}"
           .\.dotnet\dotnet.exe pack src\tachyon\pkg\Tachyon.NET.Runtime.csproj `
             -o artifacts\packages\$config\tachyon `
@@ -59,7 +59,7 @@ jobs:
       - name: Push to GitHub Packages
         run: |
           $config = "${{ inputs.configuration || 'Release' }}"
-          $version = "${{ inputs.version || '11.0.0-dev' }}"
+          $version = "${{ inputs.version || format('11.0.0-dev.{0}', github.run_number) }}"
           .\.dotnet\dotnet.exe nuget push `
             "artifacts\packages\$config\tachyon\Tachyon.NET.Runtime.$version.nupkg" `
             --source "https://nuget.pkg.github.com/Rew/index.json" `
