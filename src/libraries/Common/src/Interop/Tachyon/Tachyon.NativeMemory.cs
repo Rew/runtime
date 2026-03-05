@@ -11,7 +11,7 @@ namespace Tachyon
         internal static partial void* Alloc(nuint byteCount);
 
         [LibraryImport("*")]
-        internal static partial void* AllocZeroed(nuint elementCount, nuint elementSize);
+        internal static partial void* AllocZeroed(nuint byteCount);
 
         [LibraryImport("*")]
         internal static partial void Free(void* ptr);

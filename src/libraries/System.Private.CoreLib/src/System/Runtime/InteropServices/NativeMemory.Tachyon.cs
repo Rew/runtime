@@ -120,7 +120,7 @@ namespace System.Runtime.InteropServices
         public static void* AllocZeroed(nuint elementCount, nuint elementSize)
         {
             // The Tachyon implementation handles num == 0 && size == 0 as we expect
-            void* result = Tachyon.NativeMemory.AllocZeroed(elementCount, elementSize);
+            void* result = Tachyon.NativeMemory.AllocZeroed(elementCount * elementSize);
 
             if (result == null)
             {
