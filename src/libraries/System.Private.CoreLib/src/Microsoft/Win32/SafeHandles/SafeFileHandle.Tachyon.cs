@@ -77,5 +77,10 @@ namespace Microsoft.Win32.SafeHandles
         {
                 throw new NotImplementedException();
         }
+
+        internal System.IO.FileHandleType GetFileTypeCore()
+        {
+                throw new NotImplementedException();
+        }
     }
 }
