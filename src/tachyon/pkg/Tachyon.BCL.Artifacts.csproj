@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Tachyon.NET.Runtime</PackageId>
+    <PackageId>Tachyon.BCL.Artifacts</PackageId>
     <Authors>Rew</Authors>
-    <Description>Tachyon .NET managed runtime framework - CoreLib and managed framework libraries for the Tachyon embedded runtime.</Description>
+    <Description>Tachyon BCL build artifacts - CoreLib and managed framework libraries for repackaging by the Tachyon runtime.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <!-- Don't compile anything - this is a packaging-only project -->

@@ -49,7 +49,7 @@ echo [%STEP%/%TOTAL%] Packaging...
 
 set PKG_OUT=%REPO_ROOT%\artifacts\packages\%CONFIG%\tachyon
 
-%REPO_ROOT%\.dotnet\dotnet.exe pack "%~dp0pkg\Tachyon.NET.Runtime.csproj" ^
+%REPO_ROOT%\.dotnet\dotnet.exe pack "%~dp0pkg\Tachyon.BCL.Artifacts.csproj" ^
     -o "%PKG_OUT%" ^
     /p:PackageVersion=%PKG_VERSION% ^
     /p:TachyonConfig=%CONFIG% ^
@@ -63,5 +63,5 @@ if errorlevel 1 (
 echo.
 echo ============================================================
 echo  Build complete!
-echo  Package: %PKG_OUT%\Tachyon.NET.Runtime.%PKG_VERSION%.nupkg
+echo  Package: %PKG_OUT%\Tachyon.BCL.Artifacts.%PKG_VERSION%.nupkg
 echo ============================================================
