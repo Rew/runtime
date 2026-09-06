@@ -2859,6 +2859,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Loader\LibraryNameVariation.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\MemoryFailPoint.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Security\SecureString.Tachyon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Threading\LowLevelMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\LowLevelMonitor.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\EventWaitHandle.Tachyon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Threading\Mutex.Tachyon.cs" />

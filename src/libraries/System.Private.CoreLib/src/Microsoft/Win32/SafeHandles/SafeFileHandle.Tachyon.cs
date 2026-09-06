@@ -17,7 +17,10 @@ namespace Microsoft.Win32.SafeHandles
 
         public bool IsAsync => throw new NotImplementedException();
 
-        internal bool CanSeek => throw new NotImplementedException();
+        public static partial void CreateAnonymousPipe(out SafeFileHandle readHandle, out SafeFileHandle writeHandle, bool asyncRead, bool asyncWrite)
+        {
+                throw new NotImplementedException();
+        }
 
         /*/// <summary>Opens the specified file with the requested flags and mode.</summary>
         /// <param name="path">The path to the file.</param>
@@ -79,6 +82,11 @@ namespace Microsoft.Win32.SafeHandles
         }
 
         internal System.IO.FileHandleType GetFileTypeCore()
+        {
+                throw new NotImplementedException();
+        }
+
+        private bool GetCanSeekCore()
         {
                 throw new NotImplementedException();
         }
