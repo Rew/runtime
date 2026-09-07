@@ -178,7 +178,7 @@
     <Compile Include="$(BclSourcesRoot)\System\Reflection\MdImport.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Reflection\MemberInfo.Internal.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Reflection\Metadata\AssemblyExtensions.cs" />
-    <Compile Include="$(BclSourcesRoot)\System\Reflection\Metadata\MetadataUpdater.cs" />
+    <Compile Include="$(BclSourcesRoot)\System\Reflection\Metadata\MetadataUpdater.cs" Condition="'$(TargetsTachyon)' != 'true'" />
     <Compile Include="$(BclSourcesRoot)\System\Reflection\MethodBase.CoreCLR.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Reflection\MethodBaseInvoker.CoreCLR.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Reflection\MethodInvoker.CoreCLR.cs" />
@@ -291,6 +291,7 @@
   <ItemGroup Condition="'$(TargetsTachyon)' == 'true'">
     <Compile Include="$(BclSourcesRoot)\Internal\Runtime\InteropServices\InMemoryAssemblyLoader.PlatformNotSupported.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Threading\ClrThreadPoolBoundHandle.Tachyon.cs" />
+    <Compile Include="$(BclSourcesRoot)\System\Reflection\Metadata\MetadataUpdater.Tachyon.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Threading\Interlocked.Tachyon.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Threading\LowLevelLifoSemaphore.Tachyon.cs" />
     <Compile Include="$(BclSourcesRoot)\System\Threading\ObjectHeader.Tachyon.cs" />
