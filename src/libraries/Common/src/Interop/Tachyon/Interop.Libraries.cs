@@ -12,5 +12,9 @@ internal static partial class Interop
         internal const string Ole32 = OS_Pal;
         internal const string OleAut32 = OS_Pal;
         internal const string GlobalizationNative = "System.Globalization.Native";
+
+        // Host services declared with the System.Native PAL's entry-point names; the
+        // library name is not consulted (every non-wildcard import is an extern symbol).
+        internal const string SystemNative = "libSystem.Native";
     }
 }
