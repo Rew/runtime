@@ -5,14 +5,8 @@ namespace System.Diagnostics
 {
     public partial class Stopwatch
     {
-        private static long GetFrequency()
-        {
-            throw new NotImplementedException();
-        }
+        private static long GetFrequency() => Tachyon.Stopwatch.GetFrequency();
 
-        public static long GetTimestamp()
-        {
-            throw new NotImplementedException();
-        }
+        public static long GetTimestamp() => Tachyon.Stopwatch.GetTimestamp();
     }
 }
