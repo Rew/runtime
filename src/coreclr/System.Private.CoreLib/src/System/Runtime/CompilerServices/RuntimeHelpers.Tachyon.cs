@@ -9,10 +9,11 @@
 // that touches the VM — MethodTable fields, allocation, hashing, class
 // construction — is a [MethodImpl(InternalCall)] extern here, implemented in
 // Tachyon.Runtime.RuntimeHelpers under the same name and parameter count.
-// Members are converted as startup reaches them (so far: RunClassConstructor);
-// the type definitions (MethodTable, TypeHandle) stay until the CoreLib code
-// that compiles against them is replaced. Remaining QCalls are reached by
-// nothing yet.
+// Members are converted as startup reaches them (so far: RunClassConstructor).
+// MethodTable reads no field of its own: every member is a TypeHandle_Get*
+// service the compiler provides (see the struct), so the CoreLib code that
+// compiles against it keeps working over Tachyon's metadata. TypeHandle stays
+// as it is. Remaining QCalls are reached by nothing yet.
 
 using System.Buffers.Binary;
 using System.Diagnostics;
@@ -758,267 +759,177 @@ namespace System.Runtime.CompilerServices
         public ushort FlagsAndTokenRange;
     }
 
-    // Subset of src\vm\methodtable.h
-    [StructLayout(LayoutKind.Explicit)]
-    internal unsafe struct MethodTable
+    // Tachyon: CoreCLR's MethodTable is a native layout the BCL reads by field
+    // offset. Under Tachyon a type handle is the compiler's RuntimeType metadata,
+    // whose layout only the compiler knows, so nothing is read here: every member
+    // is answered by a TypeHandle_Get* service the compiler provides — a function
+    // in the JIT host (MethodManager.RegisterTypeInitServices) and code emitted
+    // into an AOT image (ClrHost.AotTypeInit), each one field of the metadata,
+    // filled when the type is finalized (RuntimeType.ComputeHandleData). The flag
+    // bits are Witschi.NetClr.TS.TypeHandleFlag; change both or neither. A member
+    // the runtime does not answer is an InternalCall with no implementation, so a
+    // path that reaches it fails by name rather than reading nonsense (M-48 in the
+    // Witchcraft managed roadmap says which those are).
+    internal unsafe partial struct MethodTable
     {
-        /// <summary>
-        /// The low WORD of the first field is the component size for array and string types.
-        /// </summary>
-        [FieldOffset(0)]
-        public ushort ComponentSize;
+        // Bits of TypeHandle_GetFlags: Witschi.NetClr.TS.TypeHandleFlag.
+        private const int flag_ValueType = 0x0001;
+        private const int flag_Primitive = 0x0002;             // primitives and enums, as IsPrimitive counts them
+        private const int flag_TruePrimitive = 0x0004;
+#pragma warning disable CA1823 // unread, kept so the bits match TypeHandleFlag
+        private const int flag_Enum = 0x0008;
+#pragma warning restore CA1823
+        private const int flag_Interface = 0x0010;
+        private const int flag_SzArray = 0x0020;
+        private const int flag_MdArray = 0x0040;
+        private const int flag_String = 0x0080;
+        private const int flag_Nullable = 0x0100;
+        private const int flag_ByRefLike = 0x0200;
+        private const int flag_GenericTypeDefinition = 0x0400;
+        private const int flag_HasInstantiation = 0x0800;
+        private const int flag_ContainsGenericVariables = 0x1000;
+        private const int flag_HasDefaultCtor = 0x2000;
+        private const int flag_ContainsGCPointers = 0x4000;
+        private const int flag_HasFinalizer = 0x8000;
 
-        /// <summary>
-        /// The flags for the current method table (only for not array or string types).
-        /// </summary>
-        [FieldOffset(0)]
-        private uint Flags;
+        // The header Tachyon.Runtime.ObjectHeap keeps below every object, counted in
+        // BaseSize as CoreCLR counts its own.
+        private const uint ObjectHeaderSize = 8;
 
-        /// <summary>
-        /// The base size of the type (used when allocating an instance on the heap).
-        /// </summary>
-        [FieldOffset(4)]
-        public uint BaseSize;
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetFlags")]
+        private static partial int GetFlags(void* typeHnd);
 
-        // See additional native members in methodtable.h, not needed here yet.
-        // 0x8: m_dwFlags2 (additional flags and token in upper 24 bits)
-        // 0xC: m_wNumVirtuals
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetComponentSize")]
+        private static partial int GetComponentSize(void* typeHnd);
 
-        /// <summary>
-        /// The number of interfaces implemented by the current type.
-        /// </summary>
-        [FieldOffset(0x0E)]
-        public ushort InterfaceCount;
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetBaseSize")]
+        private static partial uint GetBaseSize(void* typeHnd);
 
-        // For DEBUG builds, there is a conditional field here (see methodtable.h again).
-        // 0x10: debug_m_szClassName (display name of the class, for the debugger)
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetRank")]
+        private static partial int GetRank(void* typeHnd);
 
-        /// <summary>
-        /// A pointer to the parent method table for the current one.
-        /// </summary>
-        [FieldOffset(ParentMethodTableOffset)]
-        public MethodTable* ParentMethodTable;
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetParent")]
+        private static partial void* GetParent(void* typeHnd);
 
-        // Additional conditional fields (see methodtable.h).
-        // m_pModule
+        [SuppressGCTransition]
+        [LibraryImport(RuntimeHelpers.QCall, EntryPoint = "TypeHandle_GetElementType")]
+        private static partial void* GetElementType(void* typeHnd);
 
-        /// <summary>
-        /// A pointer to auxiliary data that is cold for method table.
-        /// </summary>
-        [FieldOffset(AuxiliaryDataOffset)]
-        public MethodTableAuxiliaryData* AuxiliaryData;
+        /// <summary>The metadata this method table is: its own address.</summary>
+        private void* Handle => Unsafe.AsPointer(ref this);
 
-        // union {
-        //   m_pEEClass (pointer to the EE class)
-        //   m_pCanonMT (pointer to the canonical method table)
-        // }
+        private int Flags => GetFlags(Handle);
 
-        /// <summary>
-        /// This element type handle is in a union with additional info or a pointer to the interface map.
-        /// Which one is used is based on the specific method table being in used (so this field is not
-        /// always guaranteed to actually be a pointer to a type handle for the element type of this type).
-        /// </summary>
-        [FieldOffset(ElementTypeOffset)]
-        public void* ElementType;
+        /// <summary>An array's element stride, 2 for a string, 0 for everything else.</summary>
+        public ushort ComponentSize => (ushort)GetComponentSize(Handle);
 
-        /// <summary>
-        /// The PerInstInfo is used to describe the generic arguments and dictionary of this type.
-        /// It points at a structure defined as PerInstInfo in C++, which is an array of pointers to generic
-        /// dictionaries, which then point to the actual type arguments + the contents of the generic dictionary.
-        /// The size of the PerInstInfo is defined in the negative space of that structure, and the size of the
-        /// generic dictionary is described in the DictionaryLayout of the associated canonical MethodTable.
-        /// </summary>
-        [FieldOffset(ElementTypeOffset)]
-        public MethodTable*** PerInstInfo;
+        /// <summary>The object header plus the instance, so an object's data is <c>BaseSize - header - pointer</c> bytes.</summary>
+        public uint BaseSize => GetBaseSize(Handle);
 
-        /// <summary>
-        /// This interface map used to list out the set of interfaces. Only meaningful if InterfaceCount is non-zero.
-        /// </summary>
-        [FieldOffset(InterfaceMapOffset)]
-        public MethodTable** InterfaceMap;
+        public MethodTable* ParentMethodTable => (MethodTable*)GetParent(Handle);
 
-        /// <summary>
-        /// This is used to hold the nullable unbox data for nullable value types.
-        /// </summary>
-        [FieldOffset(InterfaceMapOffset)]
-#if TARGET_64BIT
-        public uint NullableValueAddrOffset;
-#else
-        public byte NullableValueAddrOffset;
-#endif
+        /// <summary>The element type of an array, pointer or byref type; null otherwise.</summary>
+        public void* ElementType => GetElementType(Handle);
 
-#if TARGET_64BIT
-        [FieldOffset(InterfaceMapOffset + 4)]
-        public uint NullableValueSize;
-#else
-        [FieldOffset(InterfaceMapOffset)]
-        private uint NullableValueSizeEncoded;
-        public uint NullableValueSize => NullableValueSizeEncoded >> 8;
-#endif
+        // Not answered: interface maps, generic dictionaries, the auxiliary data and
+        // the nullable unbox layout are CoreCLR's; nothing on a supported path reads
+        // them, and a path that does fails by the extern's name.
+        public ushort InterfaceCount => GetInterfaceCount();
+        public MethodTableAuxiliaryData* AuxiliaryData => GetAuxiliaryData();
+        public MethodTable*** PerInstInfo => GetPerInstInfo();
+        public MethodTable** InterfaceMap => GetInterfaceMap();
+        public uint NullableValueAddrOffset => GetNullableValueAddrOffset();
+        public uint NullableValueSize => GetNullableValueSize();
 
-        // WFLAGS_LOW_ENUM
-        private const uint enum_flag_GenericsMask = 0x00000030;
-        private const uint enum_flag_GenericsMask_NonGeneric = 0x00000000; // no instantiation
-        private const uint enum_flag_GenericsMask_GenericInst = 0x00000010; // regular instantiation, e.g. List<String>
-        private const uint enum_flag_GenericsMask_SharedInst = 0x00000020; // shared instantiation, e.g. List<__Canon> or List<MyValueType<__Canon>>
-        private const uint enum_flag_GenericsMask_TypicalInst = 0x00000030; // the type instantiated at its formal parameters, e.g. List<T>
-        private const uint enum_flag_HasDefaultCtor = 0x00000200;
-        private const uint enum_flag_IsByRefLike = 0x00001000;
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern ushort GetInterfaceCount();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern MethodTableAuxiliaryData* GetAuxiliaryData();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern MethodTable*** GetPerInstInfo();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern MethodTable** GetInterfaceMap();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern uint GetNullableValueAddrOffset();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern uint GetNullableValueSize();
 
-        // WFLAGS_HIGH_ENUM
-        private const uint enum_flag_ContainsGCPointers = 0x01000000;
-        private const uint enum_flag_ContainsGenericVariables = 0x20000000;
-        private const uint enum_flag_HasComponentSize = 0x80000000;
-#if FEATURE_TYPEEQUIVALENCE
-        private const uint enum_flag_HasTypeEquivalence = 0x02000000;
-#endif // FEATURE_TYPEEQUIVALENCE
-#if FEATURE_OBJCMARSHAL
-        private const uint enum_flag_IsTrackedReferenceWithFinalizer = 0x04000000;
-#endif // FEATURE_OBJCMARSHAL
-        private const uint enum_flag_HasFinalizer = 0x00100000;
-        private const uint enum_flag_Collectible = 0x00200000;
-        private const uint enum_flag_Category_Mask = 0x000F0000;
-        private const uint enum_flag_Category_ValueType = 0x00040000;
-        private const uint enum_flag_Category_Nullable = 0x00050000;
-        private const uint enum_flag_Category_ElementTypeMask = 0x000E0000;
-        private const uint enum_flag_Category_Primitive = 0x00060000;
-        private const uint enum_flag_Category_TruePrimitive = 0x00070000;
-        private const uint enum_flag_Category_Array = 0x00080000;
-        private const uint enum_flag_Category_Array_Mask = 0x000C0000;
-        private const uint enum_flag_Category_ValueType_Mask = 0x000C0000;
-        private const uint enum_flag_Category_Interface = 0x000C0000;
-        // Types that require non-trivial interface cast have this bit set in the category
-        private const uint enum_flag_NonTrivialInterfaceCast = 0x00080000 // enum_flag_Category_Array
-                                                             | 0x40000000 // enum_flag_ComObject
-                                                             | 0x10000000 // enum_flag_IDynamicInterfaceCastable;
-                                                             | 0x00040000; // enum_flag_Category_ValueType
+        public bool HasComponentSize => (Flags & (flag_SzArray | flag_MdArray | flag_String)) != 0;
 
-        private const int DebugClassNamePtr = // adjust for debug_m_szClassName
-#if DEBUG
-#if TARGET_64BIT
-            8
-#else
-            4
-#endif
-#else
-            0
-#endif
-            ;
+        public bool ContainsGCPointers => (Flags & flag_ContainsGCPointers) != 0;
 
-        private const int ParentMethodTableOffset = 0x10 + DebugClassNamePtr;
-
-#if TARGET_64BIT
-        private const int AuxiliaryDataOffset = 0x20 + DebugClassNamePtr;
-#else
-        private const int AuxiliaryDataOffset = 0x18 + DebugClassNamePtr;
-#endif
-
-#if TARGET_64BIT
-        private const int ElementTypeOffset = 0x30 + DebugClassNamePtr;
-#else
-        private const int ElementTypeOffset = 0x20 + DebugClassNamePtr;
-#endif
-
-#if TARGET_64BIT
-        private const int InterfaceMapOffset = 0x38 + DebugClassNamePtr;
-#else
-        private const int InterfaceMapOffset = 0x24 + DebugClassNamePtr;
-#endif
-
-        public bool HasComponentSize => (Flags & enum_flag_HasComponentSize) != 0;
-
-        public bool ContainsGCPointers => (Flags & enum_flag_ContainsGCPointers) != 0;
-
-        public bool NonTrivialInterfaceCast => (Flags & enum_flag_NonTrivialInterfaceCast) != 0;
+        // Arrays and value types, as CoreCLR's category bits; no COM, no IDynamicInterfaceCastable.
+        public bool NonTrivialInterfaceCast => (Flags & (flag_SzArray | flag_MdArray | flag_ValueType)) != 0;
 
 #if FEATURE_TYPEEQUIVALENCE
-        public bool HasTypeEquivalence => (Flags & enum_flag_HasTypeEquivalence) != 0;
+        public bool HasTypeEquivalence => false;
 #endif // FEATURE_TYPEEQUIVALENCE
 
 #if FEATURE_OBJCMARSHAL
-        public bool IsTrackedReferenceWithFinalizer => (Flags & enum_flag_IsTrackedReferenceWithFinalizer) != 0;
+        public bool IsTrackedReferenceWithFinalizer => false;
 #endif // FEATURE_OBJCMARSHAL
 
-        public bool HasFinalizer => (Flags & enum_flag_HasFinalizer) != 0;
+        public bool HasFinalizer => (Flags & flag_HasFinalizer) != 0;
 
-        public bool IsCollectible => (Flags & enum_flag_Collectible) != 0;
+#pragma warning disable CA1822 // instance member: callers use mt->IsCollectible
+        public bool IsCollectible => false;
+#pragma warning restore CA1822
 
         internal static bool AreSameType(MethodTable* mt1, MethodTable* mt2) => mt1 == mt2;
 
-        public bool HasDefaultConstructor => (Flags & (enum_flag_HasComponentSize | enum_flag_HasDefaultCtor)) == enum_flag_HasDefaultCtor;
+        public bool HasDefaultConstructor => (Flags & flag_HasDefaultCtor) != 0;
 
         public bool IsSzArray
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                Debug.Assert(IsArray);
-                return BaseSize == (uint)(3 * sizeof(IntPtr));
-            }
+            get => (Flags & flag_SzArray) != 0;
         }
 
         public bool IsMultiDimensionalArray
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                Debug.Assert(HasComponentSize);
-                // See comment on RawArrayData for details
-                return BaseSize > (uint)(3 * sizeof(IntPtr));
-            }
+            get => (Flags & flag_MdArray) != 0;
         }
 
         // Returns rank of multi-dimensional array rank, 0 for sz arrays
         public int MultiDimensionalArrayRank
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                Debug.Assert(HasComponentSize);
-                // See comment on RawArrayData for details
-                return (int)((BaseSize - (uint)(3 * sizeof(IntPtr))) / (uint)(2 * sizeof(int)));
-            }
+            get => GetRank(Handle);
         }
 
-        public bool IsInterface => (Flags & enum_flag_Category_Mask) == enum_flag_Category_Interface;
+        public bool IsInterface => (Flags & flag_Interface) != 0;
 
-        public bool IsValueType => (Flags & enum_flag_Category_ValueType_Mask) == enum_flag_Category_ValueType;
+        public bool IsValueType => (Flags & flag_ValueType) != 0;
 
+        public bool IsNullable { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return (Flags & flag_Nullable) != 0; } }
 
-        public bool IsNullable { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return (Flags & enum_flag_Category_Mask) == enum_flag_Category_Nullable; } }
-
-        public bool IsByRefLike => (Flags & (enum_flag_HasComponentSize | enum_flag_IsByRefLike)) == enum_flag_IsByRefLike;
+        public bool IsByRefLike => (Flags & flag_ByRefLike) != 0;
 
         // Warning! UNLIKE the similarly named Reflection api, this method also returns "true" for Enums.
-        public bool IsPrimitive => (Flags & enum_flag_Category_ElementTypeMask) == enum_flag_Category_Primitive;
+        public bool IsPrimitive => (Flags & flag_Primitive) != 0;
 
-        public bool IsTruePrimitive => (Flags & enum_flag_Category_Mask) is enum_flag_Category_TruePrimitive;
+        public bool IsTruePrimitive => (Flags & flag_TruePrimitive) != 0;
 
-        public bool IsArray => (Flags & enum_flag_Category_Array_Mask) == enum_flag_Category_Array;
+        public bool IsArray => (Flags & (flag_SzArray | flag_MdArray)) != 0;
 
-        public bool HasInstantiation => (Flags & enum_flag_HasComponentSize) == 0 && (Flags & enum_flag_GenericsMask) != enum_flag_GenericsMask_NonGeneric;
+        public bool HasInstantiation => (Flags & flag_HasInstantiation) != 0;
 
-        public bool IsGenericTypeDefinition => (Flags & (enum_flag_HasComponentSize | enum_flag_GenericsMask)) == enum_flag_GenericsMask_TypicalInst;
+        public bool IsGenericTypeDefinition => (Flags & flag_GenericTypeDefinition) != 0;
 
-        public bool IsConstructedGenericType
-        {
-            get
-            {
-                uint genericsFlags = Flags & (enum_flag_HasComponentSize | enum_flag_GenericsMask);
-                return genericsFlags == enum_flag_GenericsMask_GenericInst || genericsFlags == enum_flag_GenericsMask_SharedInst;
-            }
-        }
+        // Every instantiation is its own type here; there is no shared canonical form.
+        public bool IsConstructedGenericType => (Flags & flag_HasInstantiation) != 0;
 
-        public bool IsSharedByGenericInstantiations
-        {
-            get
-            {
-                uint genericsFlags = Flags & (enum_flag_HasComponentSize | enum_flag_GenericsMask);
-                return genericsFlags == enum_flag_GenericsMask_SharedInst;
-            }
-        }
+#pragma warning disable CA1822 // instance member: callers use mt->IsSharedByGenericInstantiations
+        public bool IsSharedByGenericInstantiations => false;
+#pragma warning restore CA1822
 
-        public bool ContainsGenericVariables => (Flags & enum_flag_ContainsGenericVariables) != 0;
+        public bool ContainsGenericVariables => (Flags & flag_ContainsGenericVariables) != 0;
 
         /// <summary>
         /// Gets a <see cref="TypeHandle"/> for the element type of the current type.
@@ -1032,8 +943,8 @@ namespace System.Runtime.CompilerServices
             return new(ElementType);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern uint GetNumInstanceFieldBytes();
+        /// <summary>The instance's bytes after its type word: a value type's laid-out size, a class's fields.</summary>
+        public uint GetNumInstanceFieldBytes() => BaseSize - (ObjectHeaderSize + (uint)sizeof(IntPtr));
 
         /// <summary>
         /// Get the <see cref="CorElementType"/> representing primitive-like type. Enums are represented by underlying type.
@@ -1055,18 +966,14 @@ namespace System.Runtime.CompilerServices
         public uint GetNullableNumInstanceFieldBytes()
         {
             Debug.Assert(IsNullable);
-            Debug.Assert((NullableValueAddrOffset + NullableValueSize) == GetNumInstanceFieldBytes());
             return NullableValueAddrOffset + NullableValueSize;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetNumInstanceFieldBytesIfContainsGCPointers()
         {
-            // If the type ContainsGCPointers, we can compute the size without resorting to loading the BaseSizePadding field from the EEClass
-
             Debug.Assert(ContainsGCPointers);
-            Debug.Assert((BaseSize - (nuint)(2 * sizeof(IntPtr)) == GetNumInstanceFieldBytes()));
-            return BaseSize - (uint)(2 * sizeof(IntPtr));
+            return GetNumInstanceFieldBytes();
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
